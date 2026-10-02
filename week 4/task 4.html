@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Search</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      max-width: 420px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #1a56db;
+    }
+
+    #search {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 2px solid #1a56db;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      box-sizing: border-box;
+    }
+
+    .student {
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      background: #f0f4ff;
+      border-radius: 8px;
+      border: 1px solid #c8d4f0;
+      font-size: 15px;
+    }
+
+    mark {
+      background: #f7df1e;
+      border-radius: 3px;
+    }
+
+    #no-results {
+      display: none;
+      color: #9ca3af;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Student Search</h2>
+  <input id="search" type="text" placeholder="Search students..." aria-label="Search students">
+  <div id="student-list">
+    <div class="student" data-name="Ariunaa Bat">Ariunaa Bat — Web Programming</div>
+    <div class="student" data-name="Temuulen Erdene">Temuulen Erdene — Computer Science</div>
+    <div class="student" data-name="Saran Bold">Saran Bold — Software Engineering</div>
+    <div class="student" data-name="Munkhbayar Gan">Munkhbayar Gan — Artificial Intelligence</div>
+    <div class="student" data-name="Nomin Enkh">Nomin Enkh — Data Science</div>
+    <div class="student" data-name="Anu Tseren">Anu Tseren — Web Programming</div>
+  </div>
+  <p id="no-results">No students found.</p>
+
+  <script>
+    const searchInput = document.querySelector('#search');
+    const students = document.querySelectorAll('.student');
+    const noResults = document.querySelector('#no-results');
+
+    students.forEach((student) => {
+      student.dataset.originalText = student.textContent;
+    });
+
+    searchInput.addEventListener('input', (event) => {
+      const term = event.target.value.trim().toLocaleLowerCase();
+      let visibleCount = 0;
+
+      students.forEach((student) => {
+        const name = student.dataset.name;
+        const course = student.dataset.originalText.split(' — ')[1];
+        const matchIndex = name.toLocaleLowerCase().indexOf(term);
+
+        if (matchIndex === -1) {
+          student.style.display = 'none';
+          return;
+        }
+
+        student.style.display = '';
+        visibleCount++;
+        student.replaceChildren();
+
+        if (term) {
+          student.append(
+            document.createTextNode(name.slice(0, matchIndex))
+          );
+          const highlight = document.createElement('mark');
+          highlight.textContent = name.slice(matchIndex, matchIndex + term.length);
+          student.append(highlight);
+          student.append(document.createTextNode(name.slice(matchIndex + term.length)));
+        } else {
+          student.append(document.createTextNode(name));
+        }
+
+        student.append(document.createTextNode(` — ${course}`));
+      });
+
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>

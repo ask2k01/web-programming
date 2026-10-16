@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 6 - Random Joke</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    button {
+      padding: 10px 16px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+    }
+
+    #joke {
+      margin-top: 20px;
+    }
+
+    #status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 24px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 3px solid #d1d5db;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner {
+        animation-duration: 1.8s;
+      }
+    }
+
+    #favorites {
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Random Joke</h1>
+    <p>Click the button to fetch a random joke.</p>
+    <button id="get-joke" type="button">Get a joke</button>
+    <p id="status" role="status" aria-live="polite">
+      <span id="spinner" class="spinner" aria-hidden="true" hidden></span>
+      <span id="status-text">Ready.</span>
+    </p>
+    <section id="joke" aria-live="polite" aria-label="Random joke">
+      <p id="setup"></p>
+      <p id="punchline"></p>
+    </section>
+    <button id="save-favorite" type="button" hidden>Save Favourite</button>
+
+    <section id="favorites" aria-labelledby="favorites-heading">
+      <h2 id="favorites-heading">Saved Favourites</h2>
+      <ul id="favorite-list"></ul>
+      <p id="empty-favorites">No saved jokes yet.</p>
+    </section>
+  </main>
+
+  <script>
+    const button = document.querySelector("#get-joke");
+    const statusText = document.querySelector("#status-text");
+    const spinner = document.querySelector("#spinner");
+    const setup = document.querySelector("#setup");
+    const punchline = document.querySelector("#punchline");
+    const saveFavoriteButton = document.querySelector("#save-favorite");
+    const favoriteList = document.querySelector("#favorite-list");
+    const emptyFavorites = document.querySelector("#empty-favorites");
+    const storageKey = "week6-favorite-jokes";
+    let currentJoke = null;
+    let favorites = [];
+
+    function isJoke(value) {
+      return value !== null
+        && typeof value === "object"
+        && (typeof value.id === "number" || typeof value.id === "string")
+        && typeof value.setup === "string"
+        && typeof value.punchline === "string";
+    }
+
+    function setStatus(message, isLoading = false) {
+      statusText.textContent = message;
+      spinner.hidden = !isLoading;
+    }
+
+    function renderFavorites() {
+      favoriteList.replaceChildren();
+      emptyFavorites.hidden = favorites.length > 0;
+
+      favorites.forEach((joke) => {
+        const item = document.createElement("li");
+        const jokeSetup = document.createElement("p");
+        const jokePunchline = document.createElement("p");
+        jokeSetup.textContent = joke.setup;
+        jokePunchline.textContent = joke.punchline;
+        item.append(jokeSetup, jokePunchline);
+        favoriteList.append(item);
+      });
+    }
+
+    function isFavorite(joke) {
+      return favorites.some((favorite) => String(favorite.id) === String(joke.id));
+    }
+
+    try {
+      const savedFavorites = localStorage.getItem(storageKey);
+      if (savedFavorites !== null) {
+        const parsedFavorites = JSON.parse(savedFavorites);
+        if (!Array.isArray(parsedFavorites) || !parsedFavorites.every(isJoke)) {
+          throw new Error("Saved favourites have an invalid format.");
+        }
+        favorites = parsedFavorites;
+      }
+      renderFavorites();
+    } catch (error) {
+      console.error("Unable to load saved favourites:", error);
+      setStatus("Saved favourites could not be loaded.");
+    }
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      currentJoke = null;
+      saveFavoriteButton.hidden = true;
+      setStatus("Loading…", true);
+      setup.textContent = "";
+      punchline.textContent = "";
+
+      try {
+        const response = await fetch("https://official-joke-api.appspot.com/random_joke");
+        if (!response.ok) {
+          throw new Error(`Joke request failed with status ${response.status}.`);
+        }
+
+        const joke = await response.json();
+        if (!isJoke(joke)) {
+          throw new Error("The joke response did not contain the expected text.");
+        }
+
+        currentJoke = joke;
+        setup.textContent = joke.setup;
+        punchline.textContent = joke.punchline;
+        saveFavoriteButton.hidden = false;
+        saveFavoriteButton.disabled = isFavorite(joke);
+        setStatus("");
+      } catch (error) {
+        console.error("Unable to load a joke:", error);
+        setStatus("Could not load a joke. Please try again.");
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    saveFavoriteButton.addEventListener("click", () => {
+      if (currentJoke === null || isFavorite(currentJoke)) {
+        return;
+      }
+
+      const updatedFavorites = [...favorites, currentJoke];
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(updatedFavorites));
+        favorites = updatedFavorites;
+        renderFavorites();
+        saveFavoriteButton.disabled = true;
+        setStatus("Joke saved to your favourites.");
+      } catch (error) {
+        console.error("Unable to save favourite joke:", error);
+        setStatus("Could not save this favourite. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

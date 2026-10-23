@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Task 1 - Student Registration</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #1f2937;
+      background: #f3f6fc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: #1a2540;
+    }
+
+    main > p {
+      margin: 0 0 24px;
+      color: #5a6a8a;
+    }
+
+    form {
+      display: grid;
+      gap: 20px;
+    }
+
+    fieldset {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+      border: 1px solid #c8d4f0;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    legend {
+      padding: 0 8px;
+      color: #1a56db;
+      font-weight: 700;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #9aa8c0;
+      border-radius: 7px;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 3px solid rgb(26 86 219 / 20%);
+      border-color: #1a56db;
+    }
+
+    input[type="text"]:invalid:not(:placeholder-shown),
+    input[type="email"]:invalid:not(:placeholder-shown),
+    input[type="password"]:invalid:not(:placeholder-shown),
+    select:required:invalid {
+      border-color: #c62828;
+    }
+
+    input[type="text"]:valid:not(:placeholder-shown),
+    input[type="email"]:valid:not(:placeholder-shown),
+    input[type="password"]:valid:not(:placeholder-shown),
+    select:required:valid {
+      border-color: #238636;
+    }
+
+    .hint {
+      margin: 0;
+      color: #5a6a8a;
+      font-size: 0.875rem;
+    }
+
+    .range-value {
+      font-weight: 700;
+      color: #1a56db;
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-field input {
+      width: 20px;
+      min-height: 20px;
+      height: 20px;
+      accent-color: #1a56db;
+    }
+
+    .checkbox-field input:invalid {
+      outline: 2px solid #c62828;
+      outline-offset: 2px;
+    }
+
+    .checkbox-field input:valid {
+      outline: 2px solid #238636;
+      outline-offset: 2px;
+    }
+
+    button {
+      justify-self: start;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: #1a56db;
+      color: white;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1447b3;
+    }
+
+    @media (max-width: 480px) {
+      fieldset {
+        padding: 16px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Student Registration</h1>
+    <p>Complete the form to submit your student and account information.</p>
+
+    <form action="submit.php" method="post">
+      <fieldset>
+        <legend>Personal Info</legend>
+
+        <div class="field">
+          <label for="full-name">Full Name <span aria-hidden="true">*</span></label>
+          <input type="text" id="full-name" name="fullName" placeholder="Your full name" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="student-id">Student ID <span aria-hidden="true">*</span></label>
+          <input type="text" id="student-id" name="studentId" placeholder="123456789" pattern="\d{9}" title="Enter exactly 9 digits." inputmode="numeric" required>
+          <p class="hint">Enter exactly 9 digits.</p>
+        </div>
+
+        <div class="field">
+          <label for="date-of-birth">Date of Birth</label>
+          <input type="date" id="date-of-birth" name="dateOfBirth" autocomplete="bday">
+        </div>
+
+        <div class="field">
+          <label for="major">Major</label>
+          <select id="major" name="major">
+            <option value="">Choose your major</option>
+            <option value="computer-engineering">Computer Engineering</option>
+            <option value="computer-science">Computer Science</option>
+            <option value="web-programming">Web Programming</option>
+            <option value="data-science">Data Science</option>
+            <option value="electrical-engineering">Electrical Engineering</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="coding-experience">Years of coding experience</label>
+          <input type="range" id="coding-experience" name="codingExperience" min="0" max="10" value="0">
+          <output class="range-value" id="coding-experience-value" for="coding-experience">0 years</output>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Account Info</legend>
+
+        <div class="field">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input type="email" id="email" name="email" placeholder="name@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password <span aria-hidden="true">*</span></label>
+          <input type="password" id="password" name="password" placeholder="At least 8 characters" minlength="8" autocomplete="new-password" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone" placeholder="123-4567-8901" pattern="\d{3}-\d{4}-\d{4}" title="Use the format 123-4567-8901." autocomplete="tel" inputmode="tel">
+          <p class="hint">Use the format 123-4567-8901.</p>
+        </div>
+      </fieldset>
+
+      <div class="checkbox-field">
+        <input type="checkbox" id="terms" name="terms" value="agree" required>
+        <label for="terms">I agree to the terms <span aria-hidden="true">*</span></label>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+
+  <script>
+    const codingExperience = document.getElementById("coding-experience");
+    const codingExperienceValue = document.getElementById("coding-experience-value");
+
+    codingExperience.addEventListener("input", () => {
+      const years = Number(codingExperience.value);
+      codingExperienceValue.textContent = years === 1 ? "1 year" : `${years} years`;
+    });
+  </script>
+</body>
+</html>

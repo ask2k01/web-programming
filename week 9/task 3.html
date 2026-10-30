@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 9 Task 3 - Accessible Controls and Messages</title>
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      color: #1f2937;
+      background: #f3f6fc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c8d4f0;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .week-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .week-nav a {
+      color: #1a56db;
+      font-weight: 600;
+    }
+
+    h1,
+    h2 {
+      color: #1a2540;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .search-control {
+      display: flex;
+      gap: 8px;
+      max-width: 460px;
+    }
+
+    input {
+      min-width: 0;
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #9aa8c0;
+      border-radius: 7px;
+      font: inherit;
+    }
+
+    button {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 7px;
+      background: #1a56db;
+      color: #fff;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1447b3;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #1a7f5a;
+      outline-offset: 3px;
+    }
+
+    .error {
+      padding: 12px 14px;
+      border: 2px solid #b42318;
+      border-left-width: 8px;
+      border-radius: 8px;
+      background: #fff1f0;
+      color: #7a1710;
+      font-weight: 600;
+    }
+
+    .linked-card {
+      display: block;
+      max-width: 360px;
+      border: 1px solid #c8d4f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .linked-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    #search-feedback {
+      min-height: 1.5em;
+      color: #5a6a8a;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="week-nav" aria-label="Week 9 tasks">
+      <a href="../index.html">Home</a>
+      <a href="task 1.html">Task 1: Accessible Buttons</a>
+      <a href="task 2.html">Task 2: Accessible Images</a>
+      <a href="task 3.html" aria-current="page">Task 3: Accessible Controls</a>
+    </nav>
+    <h1>Accessible Controls and Messages</h1>
+    <p>These examples address common accessibility issues in buttons, forms, errors, and links.</p>
+
+    <section aria-labelledby="search-heading">
+      <h2 id="search-heading">1. Give icon buttons an accessible name</h2>
+      <p>The icon is visible, and the aria-label provides its name to assistive technology.</p>
+      <div class="search-control">
+        <input type="search" id="site-search" placeholder="Search this portfolio">
+        <button class="icon-btn" id="search-button" type="button" aria-label="Search">🔍</button>
+      </div>
+      <p id="search-feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <section aria-labelledby="email-heading">
+      <h2 id="email-heading">2. Associate a label with the input</h2>
+      <label for="email-field">Email address</label>
+      <input type="email" placeholder="you@example.com" id="email-field" autocomplete="email">
+    </section>
+
+    <section aria-labelledby="error-heading">
+      <h2 id="error-heading">3. Don't rely on color alone</h2>
+      <div class="error" role="alert">
+        ⚠️ Error: Password too short. Must be 8+ characters.
+      </div>
+    </section>
+
+    <section aria-labelledby="link-heading">
+      <h2 id="link-heading">4. Describe the link destination</h2>
+      <a class="linked-card" href="../index.html">
+        <img src="images/campus-illustration.svg" alt="Visit the Web Programming Project homepage">
+      </a>
+    </section>
+  </main>
+
+  <script>
+    const searchInput = document.getElementById("site-search");
+    const searchFeedback = document.getElementById("search-feedback");
+
+    document.getElementById("search-button").addEventListener("click", () => {
+      const query = searchInput.value.trim();
+      searchFeedback.textContent = query
+        ? `Search requested for: ${query}`
+        : "Enter a search term first.";
+      if (!query) {
+        searchInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

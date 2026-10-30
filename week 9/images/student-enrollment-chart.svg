@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="16" fill="#fff"/>
+  <text x="320" y="38" fill="#1a2540" font-family="Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">Student Enrollment</text>
+  <path d="M92 282h478M112 270V78" fill="none" stroke="#64748b" stroke-width="2"/>
+  <path d="M112 230h458M112 190h458M112 150h458M112 110h458" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+  <g fill="#1a56db">
+    <rect x="176" y="138" width="82" height="132" rx="5"/>
+    <rect x="319" y="116" width="82" height="154" rx="5"/>
+    <rect x="462" y="108" width="82" height="162" rx="5"/>
+  </g>
+  <g fill="#1a2540" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">
+    <text x="217" y="126">1,200</text>
+    <text x="360" y="104">1,400</text>
+    <text x="503" y="96">1,476</text>
+    <text x="217" y="302">2024</text>
+    <text x="360" y="302">2025</text>
+    <text x="503" y="302">2026</text>
+  </g>
+  <text x="40" y="180" fill="#64748b" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 40 180)">Students</text>
+</svg>

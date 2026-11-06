@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a2a">
+  <title>Sudoku - Brain Break</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #183333;
+      background: #f1f7f5;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --ink: #183333;
+      --muted: #647a78;
+      --accent: #087e72;
+      --accent-dark: #06665d;
+      --line: #d7e4df;
+      --soft: #e8f3ef;
+      --danger: #c54848;
+      --danger-soft: #fdecec;
+      --gold: #f0bf5b;
+      --white: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 28px 16px 48px;
+      background:
+        radial-gradient(ellipse at 12% 4%, rgb(143 209 189 / 24%), transparent 32rem),
+        var(--bg);
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #d28a16;
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--ink);
+      color: #c6f0df;
+      font-size: 1.2rem;
+    }
+
+    .home-link {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .home-link:hover {
+      color: var(--accent);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 270px;
+      align-items: start;
+      gap: 28px;
+    }
+
+    .game-panel,
+    .side-panel {
+      border: 1px solid rgb(215 228 223 / 90%);
+      border-radius: 24px;
+      background: rgb(255 255 255 / 90%);
+      box-shadow: 0 18px 50px rgb(34 72 64 / 8%);
+    }
+
+    .game-panel {
+      padding: clamp(18px, 4vw, 36px);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: -0.06em;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 12px 0 22px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .game-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .difficulty-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .difficulty-control select {
+      min-height: 36px;
+      padding: 6px 28px 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--white);
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .difficulty-control select:focus-visible {
+      outline: 3px solid #d28a16;
+      outline-offset: 3px;
+    }
+
+    .timer {
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.94rem;
+      font-weight: 750;
+    }
+
+    .board {
+      display: grid;
+      width: 100%;
+      aspect-ratio: 1;
+      grid-template-rows: repeat(9, minmax(0, 1fr));
+      overflow: hidden;
+      border: 2px solid #315956;
+      border-radius: 12px;
+      background: var(--white);
+      touch-action: manipulation;
+    }
+
+    .board-row {
+      display: grid;
+      min-height: 0;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+    }
+
+    .cell {
+      display: grid;
+      min-width: 0;
+      min-height: 0;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--white);
+      color: var(--accent-dark);
+      cursor: pointer;
+      font-size: clamp(0.9rem, 3.8vw, 1.55rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 560;
+      transition: background-color 100ms ease;
+    }
+
+    .cell.box-right {
+      border-right: 2px solid #78918b;
+    }
+
+    .cell.last-column {
+      border-right: 0;
+    }
+
+    .cell.box-bottom {
+      border-bottom: 2px solid #78918b;
+    }
+
+    .cell.last-row {
+      border-bottom: 0;
+    }
+
+    .cell.given {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .cell.related {
+      background: #f0f7f4;
+    }
+
+    .cell.same-number {
+      background: #dcefe8;
+      color: #075c53;
+      font-weight: 800;
+    }
+
+    .cell.selected {
+      z-index: 1;
+      background: #bce7d7;
+      box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    .cell.conflict {
+      background: var(--danger-soft);
+      color: #a72e36;
+    }
+
+    .cell.incorrect {
+      background: #fff0d6;
+      color: #8a4b08;
+    }
+
+    .cell:focus-visible {
+      z-index: 2;
+      outline: 3px solid #d28a16;
+      outline-offset: -3px;
+    }
+
+    .number-pad {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .number-button,
+    .erase-button {
+      display: grid;
+      min-height: 42px;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fbf9;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 750;
+      transition: border-color 120ms ease, background-color 120ms ease, transform 120ms ease;
+    }
+
+    .number-button:hover,
+    .erase-button:hover {
+      transform: translateY(-1px);
+      border-color: #9dc9b8;
+      background: var(--soft);
+    }
+
+    .erase-button {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .game-message {
+      min-height: 26px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .game-message.error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .game-message.success {
+      color: var(--accent-dark);
+      font-weight: 750;
+    }
+
+    .side-panel {
+      padding: 24px;
+    }
+
+    .side-panel h2 {
+      margin: 0 0 7px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .side-panel > p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .action-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-button {
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: left;
+      transition: background-color 120ms ease, border-color 120ms ease;
+    }
+
+    .action-button:hover {
+      border-color: #9dc9b8;
+      background: #f1f8f5;
+    }
+
+    .action-button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .action-button.primary:hover {
+      border-color: var(--accent-dark);
+      background: var(--accent-dark);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fbf9;
+    }
+
+    .stat-card:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .stat-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 650;
+    }
+
+    .stat-value {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .instructions {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .instructions h3 {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+    }
+
+    .instructions ul {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    kbd {
+      padding: 1px 5px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #f8fbf9;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 18px 12px 32px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .side-panel {
+        padding: 20px;
+      }
+
+      .action-list {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      }
+
+      .instructions {
+        margin-top: 18px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .topbar {
+        margin-bottom: 20px;
+      }
+
+      .brand {
+        gap: 8px;
+        font-size: 0.95rem;
+      }
+
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .home-link {
+        font-size: 0.8rem;
+      }
+
+      .game-panel {
+        padding: 16px 12px;
+      }
+
+      .cell {
+        font-size: clamp(0.78rem, 5vw, 1.15rem);
+      }
+
+      .number-pad {
+        gap: 5px;
+      }
+
+      .number-button,
+      .erase-button {
+        min-height: 38px;
+        border-radius: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-icon" aria-hidden="true">▦</span>
+        <span>Little Logic Club</span>
+      </a>
+      <a class="home-link" href="index.html">Project home</a>
+    </header>
+
+    <main class="layout">
+      <section class="game-panel" aria-labelledby="game-title">
+        <p class="eyebrow">Take a mindful break</p>
+        <h1 id="game-title">Sudoku</h1>
+        <p class="subtitle">A little focus goes a long way. Fill each row, column, and 3 × 3 box with the numbers 1 to 9.</p>
+
+        <div class="game-meta">
+          <label class="difficulty-control" for="difficulty-level">
+            Level
+            <select id="difficulty-level">
+              <option value="easy">Easy</option>
+              <option value="normal">Normal</option>
+              <option value="difficult">Difficult</option>
+            </select>
+          </label>
+          <span class="timer" id="timer" aria-label="Elapsed time">00:00</span>
+        </div>
+
+        <div class="board" id="board" role="grid" aria-label="Sudoku board"></div>
+        <div class="number-pad" id="number-pad" aria-label="Choose a number"></div>
+        <p class="game-message" id="message" role="status" aria-live="polite">Choose an empty square, then enter a number.</p>
+      </section>
+
+      <aside class="side-panel" aria-labelledby="tools-heading">
+        <h2 id="tools-heading">Your puzzle</h2>
+        <p>Take your time. You can start a fresh board whenever you like.</p>
+        <div class="action-list">
+          <button class="action-button primary" id="new-game" type="button">New puzzle</button>
+          <button class="action-button" id="reset-game" type="button">Reset board</button>
+          <button class="action-button" id="check-game" type="button">Check answers</button>
+        </div>
+
+        <div class="stats" aria-label="Sudoku statistics">
+          <div class="stat-card">
+            <span class="stat-label">Games played</span>
+            <span class="stat-value" id="games-played">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Total score</span>
+            <span class="stat-value" id="total-score">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">High score</span>
+            <span class="stat-value" id="high-score">0</span>
+          </div>
+        </div>
+        <p class="score-note">Solve a puzzle to score points: Easy 100, Normal 200, Difficult 300. Your high score is your best single-puzzle score.</p>
+
+        <div class="instructions">
+          <h3>How to play</h3>
+          <ul>
+            <li>Each row, column, and 3 × 3 box needs 1–9, without repeats.</li>
+            <li>Select a square, then choose a number or press a key from <kbd>1</kbd> to <kbd>9</kbd>.</li>
+            <li>Use <kbd>Backspace</kbd> or <kbd>Delete</kbd> to clear a square.</li>
+            <li>Arrow keys move between squares.</li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const basePuzzle = [
+      "530070000",
+      "600195000",
+      "098000060",
+      "800060003",
+      "400803001",
+      "700020006",
+      "060000280",
+      "000419005",
+      "000080079"
+    ];
+
+    const baseSolution = [
+      "534678912",
+      "672195348",
+      "198342567",
+      "859761423",
+      "426853791",
+      "713924856",
+      "961537284",
+      "287419635",
+      "345286179"
+    ];
+
+    const boardElement = document.getElementById("board");
+    const numberPad = document.getElementById("number-pad");
+    const messageElement = document.getElementById("message");
+    const timerElement = document.getElementById("timer");
+    const difficultySelect = document.getElementById("difficulty-level");
+    const gamesPlayedElement = document.getElementById("games-played");
+    const totalScoreElement = document.getElementById("total-score");
+    const highScoreElement = document.getElementById("high-score");
+    const cells = [];
+    const clueCounts = {
+      easy: 40,
+      normal: 34,
+      difficult: 28
+    };
+    const scoreValues = {
+      easy: 100,
+      normal: 200,
+      difficult: 300
+    };
+    const statsStorageKey = "little-logic-club-sudoku-stats";
+    const stats = {
+      gamesPlayed: 0,
+      totalScore: 0,
+      highScore: 0
+    };
+
+    let puzzle = [];
+    let solution = [];
+    let values = [];
+    let fixed = [];
+    let selectedIndex = -1;
+    let elapsedSeconds = 0;
+    let finished = false;
+    let answersChecked = false;
+    let scoredCurrentPuzzle = false;
+
+    function renderStats() {
+      gamesPlayedElement.textContent = stats.gamesPlayed.toLocaleString();
+      totalScoreElement.textContent = stats.totalScore.toLocaleString();
+      highScoreElement.textContent = stats.highScore.toLocaleString();
+    }
+
+    function loadStats() {
+      try {
+        const savedStats = localStorage.getItem(statsStorageKey);
+        if (savedStats === null) {
+          renderStats();
+          return;
+        }
+
+        const parsedStats = JSON.parse(savedStats);
+        const keys = ["gamesPlayed", "totalScore", "highScore"];
+        if (!parsedStats || keys.some((key) => (
+          !Number.isSafeInteger(parsedStats[key]) || parsedStats[key] < 0
+        ))) {
+          throw new Error("Saved Sudoku statistics have an invalid format.");
+        }
+
+        Object.assign(stats, parsedStats);
+        renderStats();
+      } catch (error) {
+        console.error("Unable to load Sudoku statistics:", error);
+        renderStats();
+      }
+    }
+
+    function saveStats() {
+      try {
+        localStorage.setItem(statsStorageKey, JSON.stringify(stats));
+        return true;
+      } catch (error) {
+        console.error("Unable to save Sudoku statistics:", error);
+        return false;
+      }
+    }
+
+    function shuffled(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function shuffledGroupIndexes() {
+      const bands = shuffled([0, 1, 2]);
+      return bands.flatMap((band) =>
+        shuffled([0, 1, 2]).map((row) => band * 3 + row)
+      );
+    }
+
+    function countSolutions(board, limit = 2) {
+      let bestIndex = -1;
+      let bestCandidates = null;
+
+      for (let index = 0; index < 81; index++) {
+        if (board[Math.floor(index / 9)][index % 9] !== 0) {
+          continue;
+        }
+
+        const row = Math.floor(index / 9);
+        const column = index % 9;
+        const used = new Set([
+          ...board[row],
+          ...board.map((currentRow) => currentRow[column])
+        ]);
+        const boxRow = Math.floor(row / 3) * 3;
+        const boxColumn = Math.floor(column / 3) * 3;
+        for (let r = boxRow; r < boxRow + 3; r++) {
+          for (let c = boxColumn; c < boxColumn + 3; c++) {
+            used.add(board[r][c]);
+          }
+        }
+
+        const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+          .filter((value) => !used.has(value));
+        if (candidates.length === 0) {
+          return 0;
+        }
+        if (bestCandidates === null || candidates.length < bestCandidates.length) {
+          bestIndex = index;
+          bestCandidates = candidates;
+          if (candidates.length === 1) {
+            break;
+          }
+        }
+      }
+
+      if (bestIndex === -1) {
+        return 1;
+      }
+
+      let solutions = 0;
+      const row = Math.floor(bestIndex / 9);
+      const column = bestIndex % 9;
+      for (const candidate of bestCandidates) {
+        board[row][column] = candidate;
+        solutions += countSolutions(board, limit - solutions);
+        board[row][column] = 0;
+        if (solutions >= limit) {
+          return solutions;
+        }
+      }
+      return solutions;
+    }
+
+    function createPuzzle(difficulty) {
+      const rowOrder = shuffledGroupIndexes();
+      const columnOrder = shuffledGroupIndexes();
+      const digits = shuffled([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      const digitMap = new Map(digits.map((digit, index) => [index + 1, digit]));
+
+      puzzle = [];
+      solution = [];
+
+      for (let row = 0; row < 9; row++) {
+        const puzzleRow = [];
+        const solutionRow = [];
+        for (let column = 0; column < 9; column++) {
+          const sourceRow = rowOrder[row];
+          const sourceColumn = columnOrder[column];
+          const given = Number(basePuzzle[sourceRow][sourceColumn]);
+          const answer = Number(baseSolution[sourceRow][sourceColumn]);
+          puzzleRow.push(given === 0 ? 0 : digitMap.get(given));
+          solutionRow.push(digitMap.get(answer));
+        }
+        puzzle.push(puzzleRow);
+        solution.push(solutionRow);
+      }
+
+      const targetClues = clueCounts[difficulty];
+      let clueTotal = puzzle.flat().filter((value) => value !== 0).length;
+
+      if (targetClues > clueTotal) {
+        const emptyCells = shuffled(
+          puzzle.flatMap((row, rowIndex) =>
+            row.map((value, columnIndex) => value === 0
+              ? rowIndex * 9 + columnIndex
+              : -1)
+          ).filter((index) => index >= 0)
+        );
+
+        for (const index of emptyCells) {
+          if (clueTotal >= targetClues) {
+            break;
+          }
+          const row = Math.floor(index / 9);
+          const column = index % 9;
+          puzzle[row][column] = solution[row][column];
+          clueTotal++;
+        }
+      } else if (targetClues < clueTotal) {
+        const clueCells = shuffled(
+          puzzle.flatMap((row, rowIndex) =>
+            row.map((value, columnIndex) => value !== 0
+              ? rowIndex * 9 + columnIndex
+              : -1)
+          ).filter((index) => index >= 0)
+        );
+
+        for (const index of clueCells) {
+          if (clueTotal <= targetClues) {
+            break;
+          }
+          const row = Math.floor(index / 9);
+          const column = index % 9;
+          const originalValue = puzzle[row][column];
+          puzzle[row][column] = 0;
+          if (countSolutions(puzzle.map((currentRow) => [...currentRow])) === 1) {
+            clueTotal--;
+          } else {
+            puzzle[row][column] = originalValue;
+          }
+        }
+      }
+
+      values = puzzle.map((row) => [...row]);
+      fixed = puzzle.map((row) => row.map((value) => value !== 0));
+    }
+
+    function getConflicts() {
+      const conflicts = new Set();
+      const groups = [];
+
+      for (let row = 0; row < 9; row++) {
+        groups.push(Array.from({ length: 9 }, (_, column) => row * 9 + column));
+      }
+      for (let column = 0; column < 9; column++) {
+        groups.push(Array.from({ length: 9 }, (_, row) => row * 9 + column));
+      }
+      for (let boxRow = 0; boxRow < 3; boxRow++) {
+        for (let boxColumn = 0; boxColumn < 3; boxColumn++) {
+          const group = [];
+          for (let row = boxRow * 3; row < boxRow * 3 + 3; row++) {
+            for (let column = boxColumn * 3; column < boxColumn * 3 + 3; column++) {
+              group.push(row * 9 + column);
+            }
+          }
+          groups.push(group);
+        }
+      }
+
+      groups.forEach((group) => {
+        const seen = new Map();
+        group.forEach((index) => {
+          const value = values[Math.floor(index / 9)][index % 9];
+          if (value === 0) {
+            return;
+          }
+          if (!seen.has(value)) {
+            seen.set(value, []);
+          }
+          seen.get(value).push(index);
+        });
+        seen.forEach((indexes) => {
+          if (indexes.length > 1) {
+            indexes.forEach((index) => conflicts.add(index));
+          }
+        });
+      });
+
+      return conflicts;
+    }
+
+    function updateBoard() {
+      const conflicts = getConflicts();
+      const selectedRow = Math.floor(selectedIndex / 9);
+      const selectedColumn = selectedIndex % 9;
+      const selectedValue = selectedIndex >= 0
+        ? values[selectedRow][selectedColumn]
+        : 0;
+
+      cells.forEach((cell, index) => {
+        const row = Math.floor(index / 9);
+        const column = index % 9;
+        const value = values[row][column];
+        const button = cell.button;
+
+        button.textContent = value === 0 ? "" : String(value);
+        button.classList.toggle("given", fixed[row][column]);
+        button.classList.toggle("selected", index === selectedIndex);
+        button.classList.toggle(
+          "related",
+          selectedIndex >= 0
+            && (row === selectedRow
+              || column === selectedColumn
+              || (Math.floor(row / 3) === Math.floor(selectedRow / 3)
+                && Math.floor(column / 3) === Math.floor(selectedColumn / 3)))
+        );
+        button.classList.toggle("same-number", selectedValue !== 0 && value === selectedValue);
+        button.classList.toggle("conflict", conflicts.has(index));
+        button.classList.toggle(
+          "incorrect",
+          answersChecked
+            && value !== 0
+            && !fixed[row][column]
+            && value !== solution[row][column]
+        );
+        button.tabIndex = index === selectedIndex ? 0 : -1;
+
+        const label = `Row ${row + 1}, column ${column + 1}, `
+          + (fixed[row][column] ? "given " : "")
+          + (value === 0 ? "empty" : `number ${value}`)
+          + (conflicts.has(index) ? ", conflict" : "");
+        button.setAttribute("aria-label", label);
+        button.setAttribute("aria-selected", String(index === selectedIndex));
+      });
+    }
+
+    function selectCell(index, moveFocus = false) {
+      selectedIndex = Math.max(0, Math.min(80, index));
+      updateBoard();
+      if (moveFocus) {
+        cells[selectedIndex].button.focus();
+      }
+    }
+
+    function setMessage(text, type = "") {
+      messageElement.textContent = text;
+      messageElement.className = "game-message" + (type ? ` ${type}` : "");
+    }
+
+    function enterNumber(number) {
+      if (finished) {
+        setMessage("This puzzle is complete. Start a new puzzle to keep playing.");
+        return;
+      }
+      if (selectedIndex < 0) {
+        setMessage("Choose an empty square first.");
+        return;
+      }
+
+      const row = Math.floor(selectedIndex / 9);
+      const column = selectedIndex % 9;
+      if (fixed[row][column]) {
+        setMessage("That number is part of the puzzle and cannot be changed.");
+        return;
+      }
+
+      values[row][column] = number;
+      updateBoard();
+      const conflicts = getConflicts();
+      if (conflicts.has(selectedIndex)) {
+        setMessage("That number repeats in the same row, column, or box.", "error");
+      } else {
+        setMessage(number === 0 ? "Square cleared." : "Number entered.");
+      }
+    }
+
+    function renderNumberPad() {
+      numberPad.replaceChildren();
+      for (let number = 1; number <= 9; number++) {
+        const button = document.createElement("button");
+        button.className = "number-button";
+        button.type = "button";
+        button.textContent = String(number);
+        button.setAttribute("aria-label", `Enter ${number}`);
+        button.addEventListener("click", () => enterNumber(number));
+        numberPad.append(button);
+      }
+
+      const erase = document.createElement("button");
+      erase.className = "erase-button";
+      erase.type = "button";
+      erase.textContent = "Clear";
+      erase.setAttribute("aria-label", "Clear selected square");
+      erase.addEventListener("click", () => enterNumber(0));
+      numberPad.append(erase);
+    }
+
+    function renderBoard() {
+      boardElement.replaceChildren();
+      cells.length = 0;
+
+      for (let row = 0; row < 9; row++) {
+        const rowElement = document.createElement("div");
+        rowElement.className = "board-row";
+        rowElement.setAttribute("role", "row");
+        rowElement.setAttribute("aria-label", `Row ${row + 1}`);
+
+        for (let column = 0; column < 9; column++) {
+          const index = row * 9 + column;
+          const button = document.createElement("button");
+          button.className = "cell";
+          button.type = "button";
+          button.setAttribute("role", "gridcell");
+          if (column === 2 || column === 5) {
+            button.classList.add("box-right");
+          }
+          if (column === 8) {
+            button.classList.add("last-column");
+          }
+          if (row === 2 || row === 5) {
+            button.classList.add("box-bottom");
+          }
+          if (row === 8) {
+            button.classList.add("last-row");
+          }
+          button.addEventListener("click", () => {
+            selectCell(index);
+            setMessage(fixed[row][column]
+              ? "This is a fixed number from the puzzle."
+              : "Enter a number using the keypad or keyboard.");
+          });
+          button.addEventListener("keydown", (event) => {
+            const row = Math.floor(index / 9);
+            const column = index % 9;
+            const moves = {
+              ArrowUp: [Math.max(0, row - 1), column],
+              ArrowDown: [Math.min(8, row + 1), column],
+              ArrowLeft: [row, Math.max(0, column - 1)],
+              ArrowRight: [row, Math.min(8, column + 1)]
+            };
+
+            if (moves[event.key]) {
+              event.preventDefault();
+              const [nextRow, nextColumn] = moves[event.key];
+              selectCell(nextRow * 9 + nextColumn, true);
+              return;
+            }
+            if (/^[1-9]$/.test(event.key)) {
+              event.preventDefault();
+              selectCell(index);
+              enterNumber(Number(event.key));
+              return;
+            }
+            if (event.key === "Backspace" || event.key === "Delete") {
+              event.preventDefault();
+              selectCell(index);
+              enterNumber(0);
+            }
+          });
+
+          cells.push({ button });
+          rowElement.append(button);
+        }
+
+        boardElement.append(rowElement);
+      }
+
+      updateBoard();
+      if (selectedIndex >= 0) {
+        cells[selectedIndex].button.tabIndex = 0;
+      }
+    }
+
+    function startTimer() {
+      window.setInterval(() => {
+        if (finished) {
+          return;
+        }
+        elapsedSeconds++;
+        const minutes = Math.floor(elapsedSeconds / 60).toString().padStart(2, "0");
+        const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+        timerElement.textContent = `${minutes}:${seconds}`;
+      }, 1000);
+    }
+
+    function startNewGame() {
+      const difficulty = difficultySelect.value;
+      createPuzzle(difficulty);
+      selectedIndex = puzzle.flat().findIndex((value, index) => (
+        value === 0 && !fixed[Math.floor(index / 9)][index % 9]
+      ));
+      elapsedSeconds = 0;
+      finished = false;
+      answersChecked = false;
+      scoredCurrentPuzzle = false;
+      timerElement.textContent = "00:00";
+      renderBoard();
+      const levelName = difficulty[0].toUpperCase() + difficulty.slice(1);
+      setMessage(`${levelName} puzzle ready. Choose an empty square to begin.`);
+      stats.gamesPlayed++;
+      renderStats();
+      if (!saveStats()) {
+        setMessage("Puzzle ready, but stats could not be saved in this browser.", "error");
+      }
+    }
+
+    document.getElementById("new-game").addEventListener("click", startNewGame);
+    difficultySelect.addEventListener("change", startNewGame);
+
+    document.getElementById("reset-game").addEventListener("click", () => {
+      values = puzzle.map((row) => [...row]);
+      finished = false;
+      answersChecked = false;
+      elapsedSeconds = 0;
+      timerElement.textContent = "00:00";
+      updateBoard();
+      setMessage("Board reset. Try again!");
+    });
+
+    document.getElementById("check-game").addEventListener("click", () => {
+      if (finished) {
+        setMessage("This puzzle is already complete. Start a new puzzle to play again.", "success");
+        return;
+      }
+
+      answersChecked = true;
+      updateBoard();
+
+      const conflicts = getConflicts();
+      const incorrectCount = values.reduce((total, row, rowIndex) =>
+        total + row.reduce((rowTotal, value, columnIndex) =>
+          rowTotal
+            + (value !== 0
+              && !fixed[rowIndex][columnIndex]
+              && value !== solution[rowIndex][columnIndex] ? 1 : 0), 0), 0);
+
+      if (conflicts.size > 0) {
+        setMessage("Some numbers repeat in a row, column, or box. Check the highlighted squares.", "error");
+        return;
+      }
+
+      if (incorrectCount > 0) {
+        setMessage(
+          `${incorrectCount} ${incorrectCount === 1 ? "answer is" : "answers are"} incorrect. Check the highlighted squares.`,
+          "error"
+        );
+        return;
+      }
+
+      const emptyCount = values.reduce(
+        (total, row) => total + row.filter((value) => value === 0).length,
+        0
+      );
+      if (emptyCount > 0) {
+        setMessage(`All filled answers are correct. ${emptyCount} ${emptyCount === 1 ? "square remains" : "squares remain"}.`);
+        return;
+      }
+
+      finished = true;
+      if (scoredCurrentPuzzle) {
+        setMessage(`Puzzle solved in ${timerElement.textContent}. This puzzle was already scored.`, "success");
+        return;
+      }
+
+      scoredCurrentPuzzle = true;
+      const points = scoreValues[difficultySelect.value];
+      stats.totalScore += points;
+      stats.highScore = Math.max(stats.highScore, points);
+      renderStats();
+      const saved = saveStats();
+      setMessage(
+        `Brilliant! +${points} points. Puzzle solved in ${timerElement.textContent}.`
+          + (saved ? "" : " Stats could not be saved in this browser."),
+        saved ? "success" : "error"
+      );
+    });
+
+    loadStats();
+    renderNumberPad();
+    startNewGame();
+    startTimer();
+  </script>
+</body>
+</html>

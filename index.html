@@ -272,6 +272,12 @@
       margin: 34px 0 58px;
     }
 
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 16px;
+    }
+
     .project-card {
       position: relative;
       display: grid;
@@ -287,6 +293,10 @@
       text-decoration: none;
       isolation: isolate;
       transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .project-card.document-card {
+      background: var(--dark);
     }
 
     .project-card:hover {
@@ -610,14 +620,24 @@
         <h2 id="projects-heading">A little something extra</h2>
         <p>Made for fun, built with what I learned</p>
       </div>
-      <a class="project-card" href="sudoku.html">
-        <div>
-          <p class="project-tag">Interactive project</p>
-          <h3>Sudoku</h3>
-          <p>Pick a difficulty, settle in, and solve a fresh number puzzle.</p>
-        </div>
-        <span class="project-icon" aria-hidden="true">9</span>
-      </a>
+      <div class="project-grid">
+        <a class="project-card" href="sudoku.html">
+          <div>
+            <p class="project-tag">Interactive project</p>
+            <h3>Sudoku</h3>
+            <p>Pick a difficulty, settle in, and solve a fresh number puzzle.</p>
+          </div>
+          <span class="project-icon" aria-hidden="true">9</span>
+        </a>
+        <a class="project-card document-card" href="Sudoku- Updated Little Logic Club.pdf" target="_blank" rel="noopener">
+          <div>
+            <p class="project-tag">Project document</p>
+            <h3>Sudoku PDF</h3>
+            <p>Open the Little Logic Club Sudoku project document.</p>
+          </div>
+          <span class="project-icon" aria-hidden="true">PDF</span>
+        </a>
+      </div>
     </section>
 
     <footer class="site-footer">

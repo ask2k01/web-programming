@@ -26,6 +26,13 @@
       margin: 0 auto;
     }
 
+    .home-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #1a56db;
+      font-weight: 600;
+    }
+
     h1 {
       margin: 0 0 8px;
       color: #1a2540;
@@ -160,10 +167,11 @@
 </head>
 <body>
   <main>
+    <a class="home-link" href="../index.html">← Back to Home</a>
     <h1>Student Registration</h1>
-    <p>Complete the form to submit your student and account information.</p>
+    <p>Complete the form to try the registration flow. This local demo will not send or save your information.</p>
 
-    <form action="submit.php" method="post">
+    <form id="registration-form" method="post">
       <fieldset>
         <legend>Personal Info</legend>
 
@@ -228,12 +236,24 @@
       </div>
 
       <button type="submit">Submit</button>
+      <p id="submission-status" role="status" aria-live="polite"></p>
     </form>
   </main>
 
   <script>
+    const registrationForm = document.getElementById("registration-form");
+    const submissionStatus = document.getElementById("submission-status");
     const codingExperience = document.getElementById("coding-experience");
     const codingExperienceValue = document.getElementById("coding-experience-value");
+
+    registrationForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submissionStatus.textContent = "Demo complete! Your information was not sent or saved.";
+    });
+
+    registrationForm.addEventListener("input", () => {
+      submissionStatus.textContent = "";
+    });
 
     codingExperience.addEventListener("input", () => {
       const years = Number(codingExperience.value);

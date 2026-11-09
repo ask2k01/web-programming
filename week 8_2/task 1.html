@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 8 Task 2 - Form Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fc;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #1a56db;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Student Registration</h1>
+  <p>Week 8 Task 2 - JavaScript Form Validation</p>
+  <p><a href="../index.html">Back to Home</a></p>
+  <p><a href="../week 8/task 1.html">Go to Week 8 Task 1 - Student Registration Form</a></p>
+
+  <form id="myForm" novalidate>
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" autocomplete="name">
+
+    <label for="studentId">Student ID (9 digits)</label>
+    <input type="text" id="studentId" name="studentId" inputmode="numeric">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" autocomplete="email">
+
+    <label for="password">Password (8 characters minimum)</label>
+    <input type="password" id="password" name="password" autocomplete="new-password">
+
+    <label for="phone">Phone (123-4567-8901)</label>
+    <input type="text" id="phone" name="phone" inputmode="tel" autocomplete="tel">
+
+    <button type="submit">Register</button>
+  </form>
+
+  <p id="message" aria-live="polite"></p>
+</div>
+
+<script>
+  const form = document.getElementById("myForm");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const studentId = document.getElementById("studentId").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const phone = document.getElementById("phone").value.trim();
+
+    message.className = "error";
+
+    if (name === "") {
+      message.textContent = "Please enter your full name.";
+      return;
+    }
+
+    if (!/^\d{9}$/.test(studentId)) {
+      message.textContent = "Student ID must be exactly 9 digits.";
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      message.textContent = "Please enter a valid email.";
+      return;
+    }
+
+    if (password.length < 8) {
+      message.textContent = "Password must be at least 8 characters.";
+      return;
+    }
+
+    if (!/^\d{3}-\d{4}-\d{4}$/.test(phone)) {
+      message.textContent = "Phone must use 123-4567-8901 format.";
+      return;
+    }
+
+    message.className = "success";
+    message.textContent = "Registration successful! All information is valid.";
+  });
+</script>
+
+</body>
+</html>

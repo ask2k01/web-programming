@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 6 Task 5 - Hollywood Actor Explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172554;
+      background: #eff6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 16px;
+      background: linear-gradient(160deg, #dbeafe, #f8fafc 58%);
+    }
+
+    main {
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .page-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+    }
+
+    a {
+      color: #1d4ed8;
+      font-weight: 650;
+    }
+
+    .explorer-card {
+      margin-top: 24px;
+      padding: clamp(24px, 6vw, 40px);
+      border: 1px solid #dbeafe;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 18px 50px rgb(30 64 175 / 10%);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #2563eb;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      letter-spacing: -0.05em;
+    }
+
+    .intro {
+      margin: 10px 0 26px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    input,
+    button {
+      min-height: 48px;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    input {
+      width: 100%;
+      padding: 0 12px;
+      border: 1px solid #cbd5e1;
+      color: #172554;
+    }
+
+    button {
+      padding: 0 18px;
+      border: 0;
+      background: #1d4ed8;
+      color: #fff;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    button:hover:not(:disabled) {
+      background: #1e40af;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    :focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 3px;
+    }
+
+    #status {
+      min-height: 24px;
+      margin: 18px 0;
+      color: #64748b;
+    }
+
+    #status.error {
+      color: #b91c1c;
+    }
+
+    #actor-result {
+      display: grid;
+      grid-template-columns: minmax(150px, 240px) minmax(0, 1fr);
+      gap: 22px;
+      padding-top: 22px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    #actor-result[hidden] {
+      display: none;
+    }
+
+    #actor-image {
+      display: block;
+      width: 100%;
+      min-height: 180px;
+      max-height: 320px;
+      border-radius: 14px;
+      background: #e2e8f0;
+      object-fit: cover;
+    }
+
+    #actor-image[hidden] {
+      display: none;
+    }
+
+    #actor-result h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      line-height: 1.25;
+    }
+
+    #actor-description {
+      margin: 8px 0 14px;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    #actor-biography {
+      margin: 0 0 16px;
+      color: #475569;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      form,
+      #actor-result {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      #actor-image {
+        max-height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="page-links" aria-label="Page navigation">
+      <a href="../index.html">← Back to Home</a>
+      <a href="task 1.html">Task 1 - Weather Explorer</a>
+      <a href="task 2.html">Task 2 - Currency Converter</a>
+      <a href="task 3.html">Task 3 - Trivia Challenge</a>
+      <a href="task 4.html">Task 4 - Random Formula 1 Car</a>
+      <a href="task 6.html">Task 6 - Random Profile Generator</a>
+    </nav>
+
+    <section class="explorer-card" aria-labelledby="page-title">
+      <p class="eyebrow">Week 6 · API 5</p>
+      <h1 id="page-title">Hollywood Actor Explorer</h1>
+      <p class="intro">Search for a Hollywood actor to discover their photo and a short biography.</p>
+
+      <form id="actor-form">
+        <label for="actor-search">Actor name
+          <input id="actor-search" name="actor" type="search" placeholder="e.g. Tom Hanks" autocomplete="off" required>
+        </label>
+        <button id="search-button" type="submit">Search Actor</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite">Search for an actor to view their profile.</p>
+
+      <article id="actor-result" aria-labelledby="actor-name" hidden>
+        <img id="actor-image" alt="" hidden>
+        <div>
+          <h2 id="actor-name"></h2>
+          <p id="actor-description"></p>
+          <p id="actor-biography"></p>
+          <a id="actor-source" target="_blank" rel="noopener noreferrer">Read more on Wikipedia</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("actor-form");
+    const searchInput = document.getElementById("actor-search");
+    const searchButton = document.getElementById("search-button");
+    const status = document.getElementById("status");
+    const result = document.getElementById("actor-result");
+    const actorImage = document.getElementById("actor-image");
+
+    function clearActorResult() {
+      result.hidden = true;
+      actorImage.removeAttribute("src");
+      actorImage.alt = "";
+      actorImage.hidden = true;
+    }
+
+    async function findActor(searchTerm) {
+      const searchParameters = new URLSearchParams({
+        action: "opensearch",
+        search: searchTerm,
+        limit: "5",
+        namespace: "0",
+        format: "json",
+        origin: "*"
+      });
+      const searchResponse = await fetch(`https://en.wikipedia.org/w/api.php?${searchParameters}`);
+      if (!searchResponse.ok) {
+        throw new Error(`Actor search failed (${searchResponse.status}).`);
+      }
+
+      const searchData = await searchResponse.json();
+      const title = Array.isArray(searchData[1]) ? searchData[1][0] : "";
+      if (!title) {
+        return null;
+      }
+
+      const summaryResponse = await fetch(
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, "_"))}`
+      );
+      if (!summaryResponse.ok) {
+        throw new Error(`Actor profile could not be loaded (${summaryResponse.status}).`);
+      }
+
+      return summaryResponse.json();
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const searchTerm = searchInput.value.trim();
+      if (!searchTerm) {
+        return;
+      }
+
+      searchButton.disabled = true;
+      searchButton.textContent = "Searching…";
+      status.className = "";
+      status.textContent = `Searching for ${searchTerm}…`;
+      clearActorResult();
+
+      try {
+        const actor = await findActor(searchTerm);
+        if (!actor || !actor.extract) {
+          status.textContent = `No actor profile found for "${searchTerm}". Try another name.`;
+          return;
+        }
+
+        document.getElementById("actor-name").textContent = actor.title;
+        document.getElementById("actor-description").textContent = actor.description || "Actor profile";
+        document.getElementById("actor-biography").textContent = actor.extract;
+        document.getElementById("actor-source").href =
+          actor.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(actor.title.replace(/ /g, "_"))}`;
+
+        if (actor.thumbnail?.source) {
+          actorImage.src = actor.thumbnail.source;
+          actorImage.alt = `Photo of ${actor.title}`;
+          actorImage.hidden = false;
+        }
+
+        result.hidden = false;
+        status.textContent = `Showing the Wikipedia profile for ${actor.title}.`;
+      } catch (error) {
+        console.error("Unable to load actor profile:", error);
+        status.className = "error";
+        status.textContent = "Could not load the actor profile. Check your internet connection and try again.";
+      } finally {
+        searchButton.disabled = false;
+        searchButton.textContent = "Search Actor";
+      }
+    });
+  </script>
+</body>
+</html>

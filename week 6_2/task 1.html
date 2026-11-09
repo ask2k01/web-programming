@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 6 Task 1 - Weather Explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172554;
+      background: #eff6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 16px;
+      background: linear-gradient(160deg, #dbeafe, #f8fafc 58%);
+    }
+
+    main {
+      width: min(100%, 620px);
+      margin: 0 auto;
+    }
+
+    .home-link,
+    .other-task {
+      color: #1d4ed8;
+      font-weight: 650;
+    }
+
+    .weather-card {
+      margin-top: 24px;
+      padding: clamp(24px, 6vw, 40px);
+      border: 1px solid #dbeafe;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 18px 50px rgb(30 64 175 / 10%);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #2563eb;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      letter-spacing: -0.05em;
+    }
+
+    .intro {
+      margin: 10px 0 26px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    select,
+    button {
+      min-height: 48px;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    select {
+      width: 100%;
+      padding: 0 12px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #172554;
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border: 0;
+      background: #1d4ed8;
+      color: #fff;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    button:hover:not(:disabled) {
+      background: #1e40af;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    :focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 3px;
+    }
+
+    #status {
+      min-height: 24px;
+      margin: 18px 0 0;
+      color: #64748b;
+    }
+
+    #status.error {
+      color: #b91c1c;
+    }
+
+    #weather-result {
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    #weather-result[hidden] {
+      display: none;
+    }
+
+    .weather-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .weather-heading h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .weather-icon {
+      font-size: 2.5rem;
+    }
+
+    .temperature {
+      margin: 10px 0 0;
+      font-size: clamp(3rem, 12vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.07em;
+      line-height: 1;
+    }
+
+    .condition {
+      margin: 8px 0 20px;
+      color: #475569;
+      font-size: 1.1rem;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .detail {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f1f5f9;
+    }
+
+    .detail span {
+      display: block;
+      color: #64748b;
+      font-size: 0.78rem;
+    }
+
+    .detail strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1rem;
+    }
+
+    .updated {
+      margin: 14px 0 0;
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="home-link" href="../index.html">← Back to Home</a>
+    <p><a class="other-task" href="task 2.html">Go to Week 6_2 Task 2 - Currency Converter</a></p>
+    <p><a class="other-task" href="task 3.html">Go to Week 6_2 Task 3 - Trivia Challenge</a></p>
+    <p><a class="other-task" href="task 4.html">Go to Week 6_2 Task 4 - Random Formula 1 Car</a></p>
+    <p><a class="other-task" href="task 5.html">Go to Week 6_2 Task 5 - Hollywood Actor Explorer</a></p>
+    <p><a class="other-task" href="task 6.html">Go to Week 6_2 Task 6 - Random Profile Generator</a></p>
+    <p><a class="other-task" href="../week 6/task 1.html">Go to Week 6 Task 1 - Random Joke</a></p>
+
+    <section class="weather-card" aria-labelledby="page-title">
+      <p class="eyebrow">Week 6 · API 1</p>
+      <h1 id="page-title">Weather Explorer</h1>
+      <p class="intro">Get current weather information for a selected city.</p>
+
+      <form id="weather-form">
+        <label for="city">Choose a city
+          <select id="city" name="city" required>
+            <option value="">Choose a city</option>
+            <option value="seoul">Seoul</option>
+            <option value="yangon">Yangon, Myanmar</option>
+            <option value="tokyo">Tokyo</option>
+            <option value="london">London</option>
+            <option value="new-york">New York</option>
+          </select>
+        </label>
+        <button id="weather-button" type="submit">Check Weather</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite">Choose a city to see its weather.</p>
+
+      <section id="weather-result" aria-live="polite" aria-labelledby="city-name" hidden>
+        <div class="weather-heading">
+          <h2 id="city-name"></h2>
+          <span id="weather-icon" class="weather-icon" aria-hidden="true"></span>
+        </div>
+        <p id="temperature" class="temperature"></p>
+        <p id="condition" class="condition"></p>
+        <div class="details">
+          <div class="detail">
+            <span>Feels like</span>
+            <strong id="feels-like"></strong>
+          </div>
+          <div class="detail">
+            <span>Humidity</span>
+            <strong id="humidity"></strong>
+          </div>
+          <div class="detail">
+            <span>Wind</span>
+            <strong id="wind"></strong>
+          </div>
+        </div>
+        <p id="updated" class="updated"></p>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const cities = {
+      seoul: { name: "Seoul", latitude: 37.5665, longitude: 126.9780 },
+      yangon: { name: "Yangon, Myanmar", latitude: 16.8409, longitude: 96.1735 },
+      tokyo: { name: "Tokyo", latitude: 35.6762, longitude: 139.6503 },
+      london: { name: "London", latitude: 51.5072, longitude: -0.1276 },
+      "new-york": { name: "New York", latitude: 40.7128, longitude: -74.0060 }
+    };
+
+    const weatherDescriptions = {
+      0: { label: "Clear sky", icon: "☀️" },
+      1: { label: "Mainly clear", icon: "🌤️" },
+      2: { label: "Partly cloudy", icon: "⛅" },
+      3: { label: "Overcast", icon: "☁️" },
+      45: { label: "Foggy", icon: "🌫️" },
+      48: { label: "Rime fog", icon: "🌫️" },
+      51: { label: "Light drizzle", icon: "🌦️" },
+      53: { label: "Drizzle", icon: "🌦️" },
+      55: { label: "Dense drizzle", icon: "🌧️" },
+      56: { label: "Freezing drizzle", icon: "🌧️" },
+      57: { label: "Heavy freezing drizzle", icon: "🌧️" },
+      61: { label: "Light rain", icon: "🌧️" },
+      63: { label: "Rain", icon: "🌧️" },
+      65: { label: "Heavy rain", icon: "🌧️" },
+      66: { label: "Freezing rain", icon: "🌧️" },
+      67: { label: "Heavy freezing rain", icon: "🌧️" },
+      71: { label: "Light snow", icon: "🌨️" },
+      73: { label: "Snow", icon: "🌨️" },
+      75: { label: "Heavy snow", icon: "❄️" },
+      77: { label: "Snow grains", icon: "🌨️" },
+      80: { label: "Light rain showers", icon: "🌦️" },
+      81: { label: "Rain showers", icon: "🌧️" },
+      82: { label: "Heavy rain showers", icon: "🌧️" },
+      85: { label: "Snow showers", icon: "🌨️" },
+      86: { label: "Heavy snow showers", icon: "❄️" },
+      95: { label: "Thunderstorm", icon: "⛈️" },
+      96: { label: "Thunderstorm with hail", icon: "⛈️" },
+      99: { label: "Severe thunderstorm with hail", icon: "⛈️" }
+    };
+
+    const form = document.getElementById("weather-form");
+    const citySelect = document.getElementById("city");
+    const button = document.getElementById("weather-button");
+    const status = document.getElementById("status");
+    const result = document.getElementById("weather-result");
+
+    function showWeather(city, weather) {
+      const current = weather.current;
+      if (!current || typeof current.temperature_2m !== "number") {
+        throw new Error("The weather service returned an unexpected response.");
+      }
+
+      const description = weatherDescriptions[current.weather_code]
+        || { label: "Weather conditions unavailable", icon: "🌡️" };
+
+      document.getElementById("city-name").textContent = city.name;
+      document.getElementById("weather-icon").textContent = description.icon;
+      document.getElementById("temperature").textContent = `${Math.round(current.temperature_2m)}°C`;
+      document.getElementById("condition").textContent = description.label;
+      document.getElementById("feels-like").textContent = `${Math.round(current.apparent_temperature)}°C`;
+      document.getElementById("humidity").textContent = `${current.relative_humidity_2m}%`;
+      document.getElementById("wind").textContent = `${Math.round(current.wind_speed_10m)} km/h`;
+      document.getElementById("updated").textContent = `Local time: ${current.time.replace("T", " ")}`;
+      result.hidden = false;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const city = cities[citySelect.value];
+      if (!city) {
+        status.className = "error";
+        status.textContent = "Choose a city to see its weather.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Loading…";
+      status.className = "";
+      status.textContent = `Getting current weather for ${city.name}…`;
+      result.hidden = true;
+
+      try {
+        const parameters = new URLSearchParams({
+          latitude: String(city.latitude),
+          longitude: String(city.longitude),
+          current: "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m",
+          temperature_unit: "celsius",
+          wind_speed_unit: "kmh",
+          timezone: "auto"
+        });
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${parameters}`);
+        if (!response.ok) {
+          throw new Error(`Weather request failed (${response.status}).`);
+        }
+
+        const weather = await response.json();
+        showWeather(city, weather);
+        status.textContent = `Current weather in ${city.name}.`;
+      } catch (error) {
+        console.error("Unable to load current weather:", error);
+        status.className = "error";
+        status.textContent = "Could not load weather. Check your internet connection and try again.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Check Weather";
+      }
+    });
+  </script>
+</body>
+</html>

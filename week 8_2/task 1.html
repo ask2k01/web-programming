@@ -1,118 +1,313 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Week 8 Task 2 - Form Validation</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Task 2 - JavaScript Form Validation</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #1f2937;
       background: #f3f6fc;
-      padding: 30px;
     }
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 25px;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+    }
+
+    main {
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #1a56db;
+      font-weight: 650;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: #1a2540;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: #5a6a8a;
+      line-height: 1.6;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #c8d4f0;
       border-radius: 12px;
+      background: #fff;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      font-weight: 650;
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0 15px;
-      box-sizing: border-box;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #9aa8c0;
+      border-radius: 7px;
+      font: inherit;
+    }
+
+    input:focus-visible,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #1a7f5a;
+      outline-offset: 3px;
+    }
+
+    input[aria-invalid="true"] {
+      border-color: #c62828;
+    }
+
+    input[aria-invalid="false"] {
+      border-color: #238636;
+    }
+
+    .hint,
+    .field-error {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+
+    .hint {
+      color: #5a6a8a;
+    }
+
+    .field-error {
+      min-height: 1.25em;
+      color: #b91c1c;
     }
 
     button {
+      justify-self: start;
+      min-height: 46px;
+      padding: 10px 20px;
+      border: 0;
+      border-radius: 8px;
       background: #1a56db;
-      color: white;
-      padding: 12px 20px;
-      border: none;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      border-radius: 6px;
     }
 
-    .error { color: red; }
-    .success { color: green; }
+    button:hover:not(:disabled) {
+      background: #1447b3;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    #form-status {
+      min-height: 1.5em;
+      margin: 16px 0 0;
+      font-weight: 600;
+    }
+
+    #form-status.error {
+      color: #b91c1c;
+    }
+
+    #form-status.success {
+      color: #18713b;
+    }
+
+    .page-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 480px) {
+      form {
+        padding: 18px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
+  <main>
+    <a class="home-link" href="../index.html">← Back to Home</a>
+    <h1>Upgraded Student Registration</h1>
+    <p class="intro">Week 8 Task 2 - JavaScript form validation. Complete every field and make sure both passwords match. This demo does not send or save your information.</p>
 
-<div class="container">
-  <h1>Student Registration</h1>
-  <p>Week 8 Task 2 - JavaScript Form Validation</p>
-  <p><a href="../index.html">Back to Home</a></p>
-  <p><a href="../week 8/task 1.html">Go to Week 8 Task 1 - Student Registration Form</a></p>
+    <form id="registration-form" novalidate>
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required
+          aria-describedby="name-error">
+        <p class="field-error" id="name-error"></p>
+      </div>
 
-  <form id="myForm" novalidate>
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="name" autocomplete="name">
+      <div class="field">
+        <label for="student-id">Student ID (9 digits)</label>
+        <input type="text" id="student-id" name="studentId" inputmode="numeric"
+          pattern="\d{9}" title="Enter exactly 9 digits." required
+          aria-describedby="student-id-hint student-id-error">
+        <p class="hint" id="student-id-hint">Enter exactly 9 digits.</p>
+        <p class="field-error" id="student-id-error"></p>
+      </div>
 
-    <label for="studentId">Student ID (9 digits)</label>
-    <input type="text" id="studentId" name="studentId" inputmode="numeric">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required
+          aria-describedby="email-error">
+        <p class="field-error" id="email-error"></p>
+      </div>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" autocomplete="email">
+      <div class="field">
+        <label for="password">Password (8 characters minimum)</label>
+        <input type="password" id="password" name="password" minlength="8"
+          autocomplete="new-password" required aria-describedby="password-hint password-error">
+        <p class="hint" id="password-hint">Use at least 8 characters.</p>
+        <p class="field-error" id="password-error"></p>
+      </div>
 
-    <label for="password">Password (8 characters minimum)</label>
-    <input type="password" id="password" name="password" autocomplete="new-password">
+      <div class="field">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword"
+          autocomplete="new-password" required aria-describedby="confirm-password-error">
+        <p class="field-error" id="confirm-password-error"></p>
+      </div>
 
-    <label for="phone">Phone (123-4567-8901)</label>
-    <input type="text" id="phone" name="phone" inputmode="tel" autocomplete="tel">
+      <div class="field">
+        <label for="phone">Phone (123-4567-8901)</label>
+        <input type="tel" id="phone" name="phone" inputmode="tel"
+          pattern="\d{3}-\d{4}-\d{4}" title="Use the format 123-4567-8901."
+          autocomplete="tel" required aria-describedby="phone-hint phone-error">
+        <p class="hint" id="phone-hint">Use the format 123-4567-8901.</p>
+        <p class="field-error" id="phone-error"></p>
+      </div>
 
-    <button type="submit">Register</button>
-  </form>
+      <button id="submit-button" type="submit" disabled>Complete the form to register</button>
+    </form>
 
-  <p id="message" aria-live="polite"></p>
-</div>
+    <p id="form-status" role="status" aria-live="polite">Complete all fields to enable registration.</p>
 
-<script>
-  const form = document.getElementById("myForm");
-  const message = document.getElementById("message");
+    <nav class="page-links" aria-label="Related pages">
+      <a href="../week 8/task 1.html">Week 8 Task 1 - Student Registration Form</a>
+    </nav>
 
-  form.addEventListener("submit", function(event) {
-    event.preventDefault();
+  </main>
 
-    const name = document.getElementById("name").value.trim();
-    const studentId = document.getElementById("studentId").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const phone = document.getElementById("phone").value.trim();
+  <script>
+    const form = document.getElementById("registration-form");
+    const submitButton = document.getElementById("submit-button");
+    const formStatus = document.getElementById("form-status");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirm-password");
+    const fields = [
+      { input: document.getElementById("name"), error: document.getElementById("name-error"), message: "Please enter your full name." },
+      { input: document.getElementById("student-id"), error: document.getElementById("student-id-error"), message: "Student ID must be exactly 9 digits." },
+      { input: document.getElementById("email"), error: document.getElementById("email-error"), message: "Please enter a valid email address." },
+      { input: password, error: document.getElementById("password-error"), message: "Password must be at least 8 characters." },
+      { input: confirmPassword, error: document.getElementById("confirm-password-error"), message: "Passwords do not match." },
+      { input: document.getElementById("phone"), error: document.getElementById("phone-error"), message: "Phone must use the format 123-4567-8901." }
+    ];
 
-    message.className = "error";
-
-    if (name === "") {
-      message.textContent = "Please enter your full name.";
-      return;
+    function updatePasswordMatch() {
+      const mismatch = confirmPassword.value !== ""
+        && password.value !== confirmPassword.value;
+      confirmPassword.setCustomValidity(mismatch ? "Passwords do not match." : "");
     }
 
-    if (!/^\d{9}$/.test(studentId)) {
-      message.textContent = "Student ID must be exactly 9 digits.";
-      return;
+    function getErrorMessage(field) {
+      const { input, message } = field;
+      if (input.validity.valueMissing) {
+        return "This field is required.";
+      }
+      if (input === confirmPassword && input.validity.customError) {
+        return "Passwords do not match.";
+      }
+      if (input.validity.patternMismatch || input.validity.typeMismatch || input.validity.tooShort) {
+        return message;
+      }
+      return "";
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      message.textContent = "Please enter a valid email.";
-      return;
+    function updateFormState(showErrors = false) {
+      updatePasswordMatch();
+      const allValid = fields.every(({ input }) => input.checkValidity());
+
+      fields.forEach((field) => {
+        const { input, error } = field;
+        const hasValue = input.value !== "";
+        const shouldShowError = showErrors || hasValue;
+        const errorMessage = shouldShowError ? getErrorMessage(field) : "";
+
+        if (shouldShowError) {
+          input.setAttribute("aria-invalid", String(!input.validity.valid));
+        } else {
+          input.removeAttribute("aria-invalid");
+        }
+        error.textContent = errorMessage;
+      });
+
+      submitButton.disabled = !allValid;
+      submitButton.textContent = allValid ? "Register" : "Complete the form to register";
+      if (formStatus.classList.contains("success") || formStatus.classList.contains("error")) {
+        formStatus.textContent = "";
+        formStatus.className = "";
+      }
+      if (!allValid && formStatus.textContent === "") {
+        formStatus.textContent = "Complete all fields to enable registration.";
+      } else if (allValid && !formStatus.classList.contains("success")) {
+        formStatus.textContent = "All fields are valid. You can register.";
+      }
     }
 
-    if (password.length < 8) {
-      message.textContent = "Password must be at least 8 characters.";
-      return;
-    }
+    form.addEventListener("input", () => updateFormState());
+    form.addEventListener("change", () => updateFormState());
 
-    if (!/^\d{3}-\d{4}-\d{4}$/.test(phone)) {
-      message.textContent = "Phone must use 123-4567-8901 format.";
-      return;
-    }
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      updateFormState(true);
 
-    message.className = "success";
-    message.textContent = "Registration successful! All information is valid.";
-  });
-</script>
+      if (!form.checkValidity()) {
+        const firstInvalid = fields.find(({ input }) => !input.validity.valid);
+        if (firstInvalid) {
+          firstInvalid.input.focus();
+        }
+        formStatus.className = "error";
+        formStatus.textContent = "Please correct the highlighted fields.";
+        return;
+      }
 
+      formStatus.className = "success";
+      formStatus.textContent = "Registration successful! This demo did not send or save your information.";
+    });
+
+    updateFormState();
+  </script>
 </body>
 </html>

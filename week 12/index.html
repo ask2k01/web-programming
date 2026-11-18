@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <meta name="description" content="Week 12 interactive shopping cart exercise with product filters, quantity controls, and a live order summary.">
+  <title>Week 12 | Everyday Goods Shop</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+      --ink: #24243a;
+      --muted: #6f7081;
+      --paper: #fff;
+      --canvas: #f7f6f2;
+      --line: #e7e5df;
+      --purple: #6e55d9;
+      --purple-dark: #4c35b3;
+      --purple-soft: #f0edff;
+      --lime: #d7f36a;
+      --dark: #17172b;
+      --orange: #e87b50;
+      --shadow: 0 14px 36px rgb(36 36 58 / 7%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 92% 14%, rgb(215 243 106 / 18%), transparent 24rem),
+        var(--canvas);
+      line-height: 1.5;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(1320px, 100%);
+      margin: 0 auto;
+      padding: 22px clamp(16px, 4vw, 52px) 54px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--dark);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--lime);
+      color: var(--dark);
+      font-size: 1rem;
+    }
+
+    .home-link {
+      color: var(--purple-dark);
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .home-link:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(170px, 230px);
+      align-items: center;
+      gap: 28px;
+      overflow: hidden;
+      margin: 28px 0 30px;
+      padding: clamp(26px, 5vw, 54px);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 88% 12%, rgb(110 85 217 / 42%), transparent 17rem),
+        var(--dark);
+      color: #fff;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      right: -55px;
+      bottom: -180px;
+      width: 360px;
+      height: 360px;
+      border: 1px solid rgb(215 243 106 / 24%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 30px rgb(215 243 106 / 5%), 0 0 0 65px rgb(215 243 106 / 3%);
+      content: "";
+    }
+
+    .eyebrow {
+      margin: 0 0 13px;
+      color: var(--lime);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 730px;
+      margin-bottom: 14px;
+      font-size: clamp(2.4rem, 6.4vw, 4.7rem);
+      font-weight: 850;
+      letter-spacing: -0.075em;
+      line-height: 1.02;
+    }
+
+    .hero-copy {
+      max-width: 640px;
+      margin: 0;
+      color: #e2e0ed;
+      font-size: clamp(1rem, 2vw, 1.08rem);
+      line-height: 1.7;
+    }
+
+    .hero-badge {
+      display: grid;
+      width: 174px;
+      height: 174px;
+      place-items: center;
+      align-content: center;
+      justify-self: center;
+      border: 1px solid rgb(255 255 255 / 24%);
+      border-radius: 50%;
+      background: rgb(255 255 255 / 6%);
+      text-align: center;
+      transform: rotate(7deg);
+    }
+
+    .hero-badge strong {
+      color: var(--lime);
+      font-size: 2.8rem;
+      letter-spacing: -0.08em;
+      line-height: 1;
+    }
+
+    .hero-badge span {
+      max-width: 100px;
+      margin-top: 8px;
+      color: #e2e0ed;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .shop-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+      align-items: start;
+      gap: 24px;
+    }
+
+    .section-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px 16px;
+      margin: 0 0 16px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 850;
+      letter-spacing: -0.055em;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .filter-button {
+      min-height: 38px;
+      padding: 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .filter-button:hover {
+      border-color: var(--purple);
+    }
+
+    .filter-button[aria-pressed="true"] {
+      border-color: var(--dark);
+      background: var(--dark);
+      color: #fff;
+    }
+
+    .product-count {
+      min-height: 1.4em;
+      margin: -5px 0 12px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .product-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgb(36 36 58 / 12%);
+    }
+
+    .product-art {
+      aspect-ratio: 1.6;
+      overflow: hidden;
+      background: var(--purple-soft);
+    }
+
+    .product-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-copy {
+      padding: 16px;
+    }
+
+    .product-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .product-category {
+      color: var(--purple-dark);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .product-price {
+      color: var(--dark);
+      font-size: 0.9rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .product-card h3 {
+      margin: 8px 0 5px;
+      color: var(--dark);
+      font-size: 1.08rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .product-card p {
+      min-height: 2.8em;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .add-button,
+    .checkout-button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--purple-dark);
+      color: #fff;
+      font-weight: 850;
+      cursor: pointer;
+      transition: background-color 140ms ease, transform 140ms ease;
+    }
+
+    .add-button:hover,
+    .checkout-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: var(--purple);
+    }
+
+    .add-button:active,
+    .checkout-button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .cart-panel {
+      position: sticky;
+      top: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .cart-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cart-heading h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.35rem;
+      font-weight: 850;
+      letter-spacing: -0.05em;
+    }
+
+    .cart-count {
+      display: grid;
+      min-width: 32px;
+      height: 32px;
+      place-items: center;
+      padding: 0 8px;
+      border-radius: 11px;
+      background: var(--lime);
+      color: var(--dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .cart-items {
+      display: grid;
+      gap: 14px;
+      padding: 15px 0;
+    }
+
+    .cart-empty {
+      margin: 0;
+      padding: 18px 4px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 11px;
+    }
+
+    .cart-art {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .cart-item-main {
+      min-width: 0;
+    }
+
+    .cart-item-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cart-item-name {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .cart-item-price {
+      color: var(--muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 7px;
+    }
+
+    .quantity-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quantity-control button {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--dark);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .quantity-control button:hover {
+      border-color: var(--purple);
+      color: var(--purple-dark);
+    }
+
+    .quantity-value {
+      min-width: 1em;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .remove-button {
+      padding: 4px 0;
+      border: 0;
+      background: transparent;
+      color: #9f4b39;
+      font-size: 0.76rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .remove-button:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .shipping-message {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+      font-size: 0.79rem;
+      font-weight: 750;
+    }
+
+    .cart-summary {
+      display: grid;
+      gap: 10px;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .summary-line.total {
+      color: var(--dark);
+      font-size: 1.05rem;
+      font-weight: 900;
+    }
+
+    .checkout-button {
+      margin-top: 4px;
+      background: var(--orange);
+      color: var(--dark);
+    }
+
+    .checkout-button:hover:not(:disabled) {
+      background: #f0936d;
+    }
+
+    .checkout-button:disabled {
+      background: #e3e1dc;
+      color: #777783;
+      cursor: not-allowed;
+    }
+
+    .cart-note {
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: 0.73rem;
+      text-align: center;
+    }
+
+    .status {
+      min-height: 1.5em;
+      margin: 14px 0 0;
+      color: var(--purple-dark);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 940px) {
+      .shop-layout {
+        grid-template-columns: minmax(0, 1fr) 310px;
+        gap: 17px;
+      }
+
+      .cart-panel {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .hero {
+        grid-template-columns: 1fr;
+        margin-top: 23px;
+      }
+
+      .hero-badge {
+        width: 92px;
+        height: 92px;
+        justify-self: start;
+      }
+
+      .hero-badge strong {
+        font-size: 1.7rem;
+      }
+
+      .hero-badge span {
+        font-size: 0.58rem;
+      }
+
+      .shop-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .page {
+        padding-inline: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column-reverse;
+      }
+
+      .hero {
+        padding: 25px 21px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-art { aspect-ratio: 1.8; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">A</span> Aung's Everyday Shop</a>
+      <a class="home-link" href="../index.html">← Back to portfolio</a>
+    </div>
+
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Week 12 · Interactive shopping cart</p>
+        <h1>Good picks for study, play &amp; everyday.</h1>
+        <p class="hero-copy">Browse a small collection of useful things, add your favorites, and watch the order summary respond to every change.</p>
+      </div>
+      <div class="hero-badge" aria-hidden="true"><strong>06</strong><span>things for your everyday</span></div>
+    </header>
+
+    <div class="shop-layout">
+      <section aria-labelledby="products-heading">
+        <div class="section-heading">
+          <h2 id="products-heading">The collection</h2>
+          <p>Filter a category or browse everything.</p>
+        </div>
+        <div class="filter-row" id="category-filters" role="group" aria-label="Filter products by category"></div>
+        <p class="product-count" id="product-count" role="status" aria-live="polite"></p>
+        <div class="product-grid" id="product-list"></div>
+      </section>
+
+      <aside class="cart-panel" aria-labelledby="cart-heading">
+        <div class="cart-heading">
+          <h2 id="cart-heading">Your bag</h2>
+          <span class="cart-count" id="cart-count" aria-label="0 items in bag">0</span>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <p class="shipping-message" id="shipping-message">Free shipping on orders over $75.</p>
+        <div class="cart-summary">
+          <div class="summary-line"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+          <div class="summary-line"><span>Shipping</span><span id="shipping">—</span></div>
+          <div class="summary-line total"><span>Total</span><span id="total">$0.00</span></div>
+          <button class="checkout-button" id="checkout-button" type="button" disabled>Continue to checkout</button>
+        </div>
+        <p class="cart-note">Demo checkout only — no order or payment will be made.</p>
+        <p class="status" id="cart-status" role="status" aria-live="polite"></p>
+      </aside>
+    </div>
+
+    <footer>Week 12 · Product cards, category filters, cart state, quantity controls, and a live order summary.</footer>
+  </main>
+
+  <script>
+    const products = [
+      { id: "backpack", name: "Everyday Backpack", category: "Carry", description: "A roomy, lightweight bag for campus and weekend plans.", price: 4200, image: "images/backpack.svg", imageAlt: "Illustration of a purple everyday backpack" },
+      { id: "football", name: "Street Football", category: "Play", description: "A durable ball for a quick game with friends.", price: 2900, image: "images/football.svg", imageAlt: "Illustration of a football" },
+      { id: "bottle", name: "Reusable Bottle", category: "Everyday", description: "A simple bottle to keep close through a busy day.", price: 1800, image: "images/bottle.svg", imageAlt: "Illustration of a reusable water bottle" },
+      { id: "notebook", name: "Field Notes Notebook", category: "Study", description: "A clean page for ideas, reminders, and class notes.", price: 1200, image: "images/notebook.svg", imageAlt: "Illustration of a notebook and pencil" },
+      { id: "headphones", name: "Focus Headphones", category: "Tech", description: "Comfortable listening for study time and travel.", price: 5500, image: "images/headphones.svg", imageAlt: "Illustration of over-ear headphones" },
+      { id: "lamp", name: "Clip Desk Light", category: "Study", description: "A compact light for late-night reading and writing.", price: 3600, image: "images/desk-lamp.svg", imageAlt: "Illustration of a desk lamp" }
+    ];
+
+    const state = {
+      category: "All",
+      cartItems: []
+    };
+
+    const productList = document.getElementById("product-list");
+    const filterList = document.getElementById("category-filters");
+    const productCount = document.getElementById("product-count");
+    const cartItemsElement = document.getElementById("cart-items");
+    const cartCount = document.getElementById("cart-count");
+    const subtotalElement = document.getElementById("subtotal");
+    const shippingElement = document.getElementById("shipping");
+    const totalElement = document.getElementById("total");
+    const shippingMessage = document.getElementById("shipping-message");
+    const checkoutButton = document.getElementById("checkout-button");
+    const cartStatus = document.getElementById("cart-status");
+    const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+    const freeShippingThreshold = 7500;
+    const shippingCost = 600;
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character]));
+    }
+
+    function formatPrice(cents) {
+      return currency.format(cents / 100);
+    }
+
+    function getProduct(productId) {
+      return products.find(product => product.id === productId);
+    }
+
+    function renderFilters() {
+      const categories = ["All", ...new Set(products.map(product => product.category))];
+      filterList.innerHTML = categories.map(category => `
+        <button class="filter-button" type="button" data-category="${escapeHTML(category)}" aria-pressed="${state.category === category}">
+          ${escapeHTML(category)}
+        </button>
+      `).join("");
+    }
+
+    function renderProductList() {
+      const visibleProducts = state.category === "All"
+        ? products
+        : products.filter(product => product.category === state.category);
+
+      productCount.textContent = `Showing ${visibleProducts.length} of ${products.length} products`;
+      productList.innerHTML = visibleProducts.map(product => `
+        <article class="product-card">
+          <div class="product-art">
+            <img src="${product.image}" alt="${escapeHTML(product.imageAlt)}" loading="lazy" decoding="async">
+          </div>
+          <div class="product-copy">
+            <div class="product-meta">
+              <span class="product-category">${escapeHTML(product.category)}</span>
+              <span class="product-price">${formatPrice(product.price)}</span>
+            </div>
+            <h3>${escapeHTML(product.name)}</h3>
+            <p>${escapeHTML(product.description)}</p>
+            <button class="add-button" type="button" data-action="add" data-product-id="${product.id}" aria-label="Add ${escapeHTML(product.name)} to your bag">Add to bag</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderCart() {
+      const itemCount = state.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = state.cartItems.reduce((sum, item) => {
+        const product = getProduct(item.id);
+        if (!product) {
+          throw new Error(`Unknown product in cart: ${item.id}`);
+        }
+        return sum + product.price * item.quantity;
+      }, 0);
+      const shipping = subtotal === 0 || subtotal >= freeShippingThreshold ? 0 : shippingCost;
+      const total = subtotal + shipping;
+
+      cartCount.textContent = String(itemCount);
+      cartCount.setAttribute("aria-label", `${itemCount} ${itemCount === 1 ? "item" : "items"} in bag`);
+      cartItemsElement.innerHTML = state.cartItems.length === 0
+        ? '<p class="cart-empty">Your bag is ready for its first good pick.</p>'
+        : state.cartItems.map(item => {
+          const product = getProduct(item.id);
+          if (!product) {
+            throw new Error(`Unknown product in cart: ${item.id}`);
+          }
+          return `
+            <article class="cart-item">
+              <img class="cart-art" src="${product.image}" alt="" loading="lazy" decoding="async">
+              <div class="cart-item-main">
+                <div class="cart-item-top">
+                  <p class="cart-item-name">${escapeHTML(product.name)}</p>
+                  <span class="cart-item-price">${formatPrice(product.price * item.quantity)}</span>
+                </div>
+                <div class="cart-item-actions">
+                  <div class="quantity-control" aria-label="Quantity for ${escapeHTML(product.name)}">
+                    <button type="button" data-action="decrease" data-product-id="${product.id}" aria-label="Decrease ${escapeHTML(product.name)} quantity">−</button>
+                    <span class="quantity-value">${item.quantity}</span>
+                    <button type="button" data-action="increase" data-product-id="${product.id}" aria-label="Increase ${escapeHTML(product.name)} quantity">+</button>
+                  </div>
+                  <button class="remove-button" type="button" data-action="remove" data-product-id="${product.id}">Remove</button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+      subtotalElement.textContent = formatPrice(subtotal);
+      shippingElement.textContent = shipping === 0 ? (subtotal === 0 ? "—" : "Free") : formatPrice(shipping);
+      totalElement.textContent = formatPrice(total);
+      checkoutButton.disabled = itemCount === 0;
+      shippingMessage.textContent = subtotal === 0
+        ? "Free shipping on orders over $75."
+        : subtotal >= freeShippingThreshold
+          ? "Free shipping unlocked for this order."
+          : `Add ${formatPrice(freeShippingThreshold - subtotal)} more for free shipping.`;
+    }
+
+    function updateCart(action, productId) {
+      const product = getProduct(productId);
+      if (!product) {
+        throw new Error(`Unknown product: ${productId}`);
+      }
+      const currentItem = state.cartItems.find(item => item.id === productId);
+
+      if (action === "add" || action === "increase") {
+        state.cartItems = currentItem
+          ? state.cartItems.map(item => item.id === productId ? { ...item, quantity: item.quantity + 1 } : item)
+          : [...state.cartItems, { id: productId, quantity: 1 }];
+        cartStatus.textContent = `${product.name} added to your bag.`;
+      } else if (action === "decrease" && currentItem) {
+        state.cartItems = currentItem.quantity === 1
+          ? state.cartItems.filter(item => item.id !== productId)
+          : state.cartItems.map(item => item.id === productId ? { ...item, quantity: item.quantity - 1 } : item);
+        cartStatus.textContent = currentItem.quantity === 1
+          ? `${product.name} removed from your bag.`
+          : `${product.name} quantity decreased.`;
+      } else if (action === "remove" && currentItem) {
+        state.cartItems = state.cartItems.filter(item => item.id !== productId);
+        cartStatus.textContent = `${product.name} removed from your bag.`;
+      } else {
+        throw new Error(`Invalid cart action: ${action}`);
+      }
+
+      renderCart();
+    }
+
+    document.addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      if (button.dataset.category) {
+        state.category = button.dataset.category;
+        renderFilters();
+        renderProductList();
+        return;
+      }
+
+      if (button.dataset.action) {
+        updateCart(button.dataset.action, button.dataset.productId);
+      }
+    });
+
+    checkoutButton.addEventListener("click", () => {
+      cartStatus.textContent = state.cartItems.length
+        ? "This is a demo checkout. No order has been placed."
+        : "Add a product before continuing.";
+    });
+
+    renderFilters();
+    renderProductList();
+    renderCart();
+  </script>
+</body>
+</html>

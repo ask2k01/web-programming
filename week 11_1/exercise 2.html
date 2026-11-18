@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <title>Week 11_1 Exercise 2 - Notification List</title>
+  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 800px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #4c35b3;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .page-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-bottom: 24px;
+    }
+
+    .page-links a {
+      font-weight: 700;
+    }
+
+    .page-links .home-link {
+      margin: 0;
+    }
+
+    h1,
+    h2 {
+      color: #24243a;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro {
+      margin: 12px 0 24px;
+      color: #55566a;
+    }
+
+    .demo-panel,
+    .code-panel {
+      margin-top: 20px;
+      padding: clamp(18px, 4vw, 28px);
+      border: 1px solid #e7e5df;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .demo-panel h2,
+    .code-panel h2 {
+      margin-top: 0;
+    }
+
+    .notification-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .notification-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid;
+      border-radius: 10px;
+    }
+
+    .notification-item.success {
+      border-color: #86c99b;
+      background: #effaf2;
+      color: #175c2c;
+    }
+
+    .notification-item.warning {
+      border-color: #e8c66b;
+      background: #fff9e8;
+      color: #714d00;
+    }
+
+    .notification-item.info {
+      border-color: #8db9ed;
+      background: #eff6ff;
+      color: #174783;
+    }
+
+    .notification-icon {
+      flex: 0 0 auto;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .notification-message {
+      margin: 0;
+    }
+
+    #load-status {
+      color: #55566a;
+    }
+
+    pre {
+      max-width: 100%;
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 8px;
+      background: #17172b;
+      color: #fff;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      tab-size: 2;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="page-links" aria-label="Week 11_1 exercises">
+      <a href="../index.html">← Back to portfolio</a>
+      <a href="index.html">Week 11_1 overview</a>
+      <a href="exercise 1.html">Exercise 1 - ProfileCard</a>
+      <a href="exercise 3.html">Exercise 3 - Reusable Card</a>
+    </nav>
+
+    <header>
+      <h1>Week 11_1 · Exercise 2</h1>
+      <p class="intro">Render an array of notifications with a reusable React component and a conditional icon for each type.</p>
+    </header>
+
+    <section class="demo-panel" aria-labelledby="demo-heading">
+      <h2 id="demo-heading">Notification list</h2>
+      <p id="load-status" role="status" aria-live="polite">Loading React notifications…</p>
+      <div id="notification-root"></div>
+    </section>
+
+    <section class="code-panel" aria-labelledby="code-heading">
+      <h2 id="code-heading">Component code</h2>
+      <pre><code>const notifications = [
+  { id: 1, type: 'success', message: 'Profile updated successfully' },
+  { id: 2, type: 'warning', message: 'Password expires in 3 days' },
+  { id: 3, type: 'info', message: 'New lecture materials available' },
+];
+
+function NotificationItem({ type, message }) {
+  const icon = type === 'success'
+    ? '✅'
+    : type === 'warning'
+      ? '⚠️'
+      : 'ℹ️';
+
+  return (
+    &lt;li className={`notification-item ${type}`}&gt;
+      &lt;span aria-hidden="true"&gt;{icon}&lt;/span&gt;
+      &lt;p&gt;{message}&lt;/p&gt;
+    &lt;/li&gt;
+  );
+}
+
+function NotificationList() {
+  return (
+    &lt;ul&gt;
+      {notifications.map(notification =&gt; (
+        &lt;NotificationItem
+          key={notification.id}
+          type={notification.type}
+          message={notification.message}
+        /&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+    </section>
+  </main>
+
+  <script type="text/babel">
+    const notifications = [
+      { id: 1, type: "success", message: "Profile updated successfully" },
+      { id: 2, type: "warning", message: "Password expires in 3 days" },
+      { id: 3, type: "info", message: "New lecture materials available" }
+    ];
+
+    function NotificationItem({ type, message }) {
+      const icon = type === "success"
+        ? "✅"
+        : type === "warning"
+          ? "⚠️"
+          : "ℹ️";
+
+      return (
+        <li className={`notification-item ${type}`}>
+          <span className="notification-icon" aria-hidden="true">{icon}</span>
+          <p className="notification-message">{message}</p>
+        </li>
+      );
+    }
+
+    function NotificationList() {
+      return (
+        <ul className="notification-list">
+          {notifications.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              type={notification.type}
+              message={notification.message}
+            />
+          ))}
+        </ul>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("notification-root"));
+    root.render(<NotificationList />);
+    document.getElementById("load-status").textContent =
+      "Three notifications rendered with icons selected by type.";
+  </script>
+</body>
+</html>

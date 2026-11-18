@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <title>Week 11_1 Exercise 1 - ProfileCard</title>
+  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #4c35b3;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .page-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-bottom: 24px;
+    }
+
+    .page-links .home-link {
+      margin: 0;
+    }
+
+    h1,
+    h2 {
+      color: #24243a;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro {
+      margin: 12px 0 24px;
+      color: #55566a;
+    }
+
+    .demo-panel,
+    .code-panel {
+      margin-top: 20px;
+      padding: clamp(18px, 4vw, 28px);
+      border: 1px solid #e7e5df;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .demo-panel h2,
+    .code-panel h2 {
+      margin-top: 0;
+    }
+
+    #profile-root {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .profile-card {
+      width: min(100%, 300px);
+      padding: 16px;
+      border: 1px solid #e7e5df;
+      border-radius: 16px;
+      background: #fff;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-card img {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f0edff;
+    }
+
+    .profile-card h3 {
+      margin: 12px 0 4px;
+      color: #24243a;
+    }
+
+    .profile-card p {
+      margin: 4px 0 10px;
+      color: #55566a;
+    }
+
+    .profile-card a {
+      overflow-wrap: anywhere;
+    }
+
+    pre {
+      max-width: 100%;
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 8px;
+      background: #17172b;
+      color: #fff;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      tab-size: 2;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    #load-status {
+      color: #55566a;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="page-links" aria-label="Week 11_1 exercises">
+      <a class="home-link" href="../index.html">← Back to portfolio</a>
+      <a href="index.html">Week 11_1 overview</a>
+      <a href="exercise 2.html">Exercise 2 - Notification List</a>
+      <a href="exercise 3.html">Exercise 3 - Reusable Card</a>
+    </nav>
+    <header>
+      <h1>Week 11_1 · Exercise 1</h1>
+      <p class="intro">Build a reusable React profile card with props and a default avatar image.</p>
+    </header>
+
+    <section class="demo-panel" aria-labelledby="demo-heading">
+      <h2 id="demo-heading">Live ProfileCard examples</h2>
+      <p id="load-status" role="status" aria-live="polite">Loading React examples…</p>
+      <div id="profile-root"></div>
+    </section>
+
+    <section class="code-panel" aria-labelledby="code-heading">
+      <h2 id="code-heading">Component code</h2>
+      <pre><code>function ProfileCard({
+  name,
+  role,
+  email,
+  avatarUrl = 'https://via.placeholder.com/80'
+}) {
+  return (
+    &lt;div style={{
+      border: '1px solid #e7e5df',
+      borderRadius: 16,
+      padding: 16,
+      maxWidth: 300,
+      background: '#fff'
+    }}&gt;
+      &lt;img src={avatarUrl} alt={name}
+        style={{ borderRadius: '50%', width: 80 }} /&gt;
+      &lt;h2&gt;{name}&lt;/h2&gt;
+      &lt;p&gt;{role}&lt;/p&gt;
+      &lt;a href={`mailto:${email}`}&gt;{email}&lt;/a&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Omitting avatarUrl uses the default placeholder.
+&lt;ProfileCard
+  name="Aung Sett Khine"
+  role="Web Programming Student"
+  email="aungsettkhine2001@gmail.com"
+/&gt;</code></pre>
+    </section>
+  </main>
+
+  <script type="text/babel">
+    function ProfileCard({
+      name,
+      role,
+      email,
+      avatarUrl = "https://via.placeholder.com/80"
+    }) {
+      return (
+        <article className="profile-card">
+          <img src={avatarUrl} alt={name} width="80" height="80" />
+          <h3>{name}</h3>
+          <p>{role}</p>
+          <a href={`mailto:${email}`}>{email}</a>
+        </article>
+      );
+    }
+
+    function App() {
+      return (
+        <>
+          <ProfileCard
+            name="Aung Sett Khine"
+            role="Web Programming Student"
+            email="aungsettkhine2001@gmail.com"
+          />
+          <ProfileCard
+            name="Maya Chen"
+            role="Web Development Student"
+            email="maya.chen@example.com"
+            avatarUrl="https://randomuser.me/api/portraits/women/68.jpg"
+          />
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("profile-root"));
+    root.render(<App />);
+    document.getElementById("load-status").textContent =
+      "The first card uses the default avatar; the second passes a custom avatarUrl.";
+  </script>
+</body>
+</html>

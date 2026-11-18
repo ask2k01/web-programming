@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <title>Week 11_1 | React Component Studio</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+      --ink: #24243a;
+      --muted: #55566a;
+      --paper: #fff;
+      --line: #e7e5df;
+      --purple-dark: #4c35b3;
+      --purple-soft: #f0edff;
+      --lime: #d7f36a;
+      --dark: #17172b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 28px clamp(16px, 5vw, 64px) 48px;
+      background:
+        radial-gradient(ellipse at 92% 10%, rgb(215 243 106 / 20%), transparent 24rem),
+        #f7f6f2;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    .page {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .top-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .back-link {
+      color: var(--purple-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .course-tag {
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(28px, 6vw, 56px);
+      border-radius: 28px;
+      background: var(--dark);
+      color: #fff;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      top: -110px;
+      right: 7%;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgb(215 243 106 / 28%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 32px rgb(215 243 106 / 6%), 0 0 0 68px rgb(215 243 106 / 4%);
+      content: "";
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--lime);
+      font-size: 0.75rem;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 700px;
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 4.7rem);
+      letter-spacing: -0.07em;
+      line-height: 1.02;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin: 18px 0 0;
+      color: #e3e1ef;
+      font-size: clamp(1rem, 2vw, 1.12rem);
+      line-height: 1.7;
+    }
+
+    .section-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin: 38px 0 16px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-heading span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+      gap: 16px;
+    }
+
+    .exercise-card {
+      display: flex;
+      min-height: 225px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      text-decoration: none;
+      box-shadow: 0 5px 16px rgb(36 36 58 / 4%);
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      cursor: pointer;
+    }
+
+    .exercise-card:hover,
+    .exercise-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: #b7a9f5;
+      box-shadow: 0 16px 30px rgb(36 36 58 / 10%);
+    }
+
+    .exercise-card:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .exercise-card.is-selected {
+      border-color: var(--purple-dark);
+      box-shadow: 0 0 0 2px rgb(76 53 179 / 12%), 0 12px 28px rgb(36 36 58 / 8%);
+    }
+
+    .exercise-topline {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .exercise-number {
+      color: var(--purple-dark);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .exercise-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .exercise-card h3 {
+      margin: 18px 0 7px;
+      color: var(--ink);
+      font-size: 1.2rem;
+      letter-spacing: -0.035em;
+    }
+
+    .exercise-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .open-label {
+      margin-top: auto;
+      padding-top: 20px;
+      color: var(--purple-dark);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .lab-panel {
+      margin-top: 24px;
+      padding: clamp(20px, 4vw, 32px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--paper);
+      box-shadow: 0 12px 32px rgb(36 36 58 / 6%);
+      scroll-margin-top: 20px;
+    }
+
+    .lab-panel[hidden] {
+      display: none;
+    }
+
+    .lab-panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .lab-kicker {
+      margin: 0 0 6px;
+      color: var(--purple-dark);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .lab-panel h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      letter-spacing: -0.045em;
+    }
+
+    .lab-panel h3 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+
+    .lab-panel p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .lab-surface {
+      padding: clamp(16px, 3vw, 22px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfaf8;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 14px;
+    }
+
+    .lab-actions,
+    .lab-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lab-actions {
+      margin-top: 14px;
+    }
+
+    .lab-button {
+      min-height: 40px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .lab-button:hover,
+    .lab-button:focus-visible {
+      border-color: #b7a9f5;
+    }
+
+    .lab-button:focus-visible,
+    .lab-color-dot:focus-visible,
+    .lab-choice:focus-visible {
+      outline: 3px solid rgb(76 53 179 / 20%);
+      outline-offset: 3px;
+    }
+
+    .lab-button.primary {
+      border-color: var(--purple-dark);
+      background: var(--purple-dark);
+      color: #fff;
+    }
+
+    .lab-button.active,
+    .lab-button[aria-pressed="true"] {
+      border-color: var(--purple-dark);
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+    }
+
+    .lab-link {
+      color: var(--purple-dark);
+      font-weight: 800;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    button.lab-link {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .lab-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #d5d2ca;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .lab-input:focus-visible {
+      border-color: var(--purple-dark);
+      outline: 3px solid rgb(76 53 179 / 18%);
+    }
+
+    .lab-label {
+      display: grid;
+      gap: 6px;
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
+
+    .lab-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .lab-row:last-child {
+      border-bottom: 0;
+    }
+
+    .lab-meta {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .lab-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .product-card {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .product-icon {
+      display: grid;
+      width: 58px;
+      height: 58px;
+      place-items: center;
+      border-radius: 16px;
+      background: var(--lime);
+      font-size: 1.65rem;
+    }
+
+    .product-price {
+      display: block;
+      margin-top: 12px;
+      color: var(--purple-dark);
+      font-size: 1.15rem;
+      font-weight: 850;
+    }
+
+    .counter-display {
+      display: grid;
+      min-height: 130px;
+      place-items: center;
+      margin-bottom: 14px;
+      border-radius: 16px;
+      color: var(--dark);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 850;
+      transition: background-color 140ms ease;
+    }
+
+    .lab-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .lab-choice {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .lab-choice:last-child {
+      border-bottom: 0;
+    }
+
+    .lab-choice[aria-pressed="true"] {
+      color: var(--purple-dark);
+      font-weight: 800;
+    }
+
+    .lab-color-dot {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      border: 1px solid rgb(36 36 58 / 12%);
+      border-radius: 50%;
+    }
+
+    .lab-code {
+      overflow-x: auto;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--dark);
+      color: #fff;
+      font: 0.88rem/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .profile-preview {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 110px;
+    }
+
+    .profile-initials {
+      display: grid;
+      width: 68px;
+      height: 68px;
+      flex: 0 0 68px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--purple-dark);
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 850;
+    }
+
+    .profile-preview h3,
+    .profile-preview p {
+      margin: 0 0 5px;
+    }
+
+    .profile-preview > div {
+      min-width: 0;
+    }
+
+    .profile-preview a {
+      overflow-wrap: anywhere;
+    }
+
+    .task-index-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+      gap: 8px 20px;
+      padding-left: 22px;
+    }
+
+    .task-index-list li {
+      padding: 4px 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 20px;
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav" aria-label="Page navigation">
+      <a class="back-link" href="../index.html">← Back to portfolio</a>
+      <span class="course-tag">WEB PROGRAMMING · COMPONENTS</span>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Learning by building</p>
+      <h1>Week 11_1<br>React Component Studio</h1>
+      <p class="hero-copy">Practice reusable components, props, conditional rendering, composition, and state. Explore three React exercises plus ten interactive component labs.</p>
+    </header>
+
+    <section aria-labelledby="exercises-heading">
+      <div class="section-heading">
+        <h2 id="exercises-heading">Choose a component lab</h2>
+        <span>13 exercises · 3 React demos and 10 interactive labs</span>
+      </div>
+
+      <div class="exercise-grid">
+        <a class="exercise-card" href="exercise 1.html">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 01</span>
+            <span class="exercise-icon" aria-hidden="true">◉</span>
+          </div>
+          <h3>ProfileCard</h3>
+          <p>Pass profile details as props and provide a default avatar when one is omitted.</p>
+          <span class="open-label">Open exercise →</span>
+        </a>
+
+        <a class="exercise-card" href="exercise 2.html">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 02</span>
+            <span class="exercise-icon" aria-hidden="true">✳</span>
+          </div>
+          <h3>Notification List</h3>
+          <p>Render notification data with a reusable item and an icon selected by type.</p>
+          <span class="open-label">Open exercise →</span>
+        </a>
+
+        <a class="exercise-card" href="exercise 3.html">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 03</span>
+            <span class="exercise-icon" aria-hidden="true">▤</span>
+          </div>
+          <h3>Card &amp; Children</h3>
+          <p>Build a titled card that can wrap different content passed through children.</p>
+          <span class="open-label">Open exercise →</span>
+        </a>
+
+        <button class="exercise-card" type="button" data-lab="product" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 04</span>
+            <span class="exercise-icon" aria-hidden="true">✦</span>
+          </div>
+          <h3>ProductCard Demo</h3>
+          <p>Adjust quantities, add products to a cart, and track the running total.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="catalog" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 05</span>
+            <span class="exercise-icon" aria-hidden="true">▧</span>
+          </div>
+          <h3>Course Catalog</h3>
+          <p>Filter a course list and save courses you want to revisit.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="practice" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 06</span>
+            <span class="exercise-icon" aria-hidden="true">⌁</span>
+          </div>
+          <h3>Interactive Practice</h3>
+          <p>Change component state with a counter and a live color control.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="directory" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 07</span>
+            <span class="exercise-icon" aria-hidden="true">⌕</span>
+          </div>
+          <h3>Student Directory</h3>
+          <p>Search sample student records by name or area of study.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="gallery" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 08</span>
+            <span class="exercise-icon" aria-hidden="true">▦</span>
+          </div>
+          <h3>Portfolio Gallery</h3>
+          <p>Select a project tile and open its corresponding portfolio page.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="components" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 09</span>
+            <span class="exercise-icon" aria-hidden="true">⌘</span>
+          </div>
+          <h3>Component Lab</h3>
+          <p>Switch between short notes about reusable component concepts.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="selected-work" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 10</span>
+            <span class="exercise-icon" aria-hidden="true">◇</span>
+          </div>
+          <h3>React Selected Work</h3>
+          <p>Filter portfolio projects by category and explore selected work.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="state" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 11</span>
+            <span class="exercise-icon" aria-hidden="true">⚛</span>
+          </div>
+          <h3>React State Lab</h3>
+          <p>Try a stateful counter and check your understanding of props and state.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="task-index" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 12</span>
+            <span class="exercise-icon" aria-hidden="true">☷</span>
+          </div>
+          <h3>Week 11 Task Index</h3>
+          <p>Review all thirteen exercises and the component concepts they cover.</p>
+          <span class="open-label">Open index →</span>
+        </button>
+
+        <button class="exercise-card" type="button" data-lab="live-profile" aria-controls="lab-panel" aria-expanded="false">
+          <div class="exercise-topline">
+            <span class="exercise-number">Exercise 13</span>
+            <span class="exercise-icon" aria-hidden="true">✎</span>
+          </div>
+          <h3>Student Profile Card (Live)</h3>
+          <p>Edit profile fields and watch the reusable student card update instantly.</p>
+          <span class="open-label">Open lab →</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="lab-panel" id="lab-panel" aria-labelledby="lab-heading" hidden>
+      <div class="lab-panel-header">
+        <div>
+          <p class="lab-kicker">Interactive component lab</p>
+          <h2 id="lab-heading" aria-live="polite">Selected lab</h2>
+        </div>
+        <button class="lab-button" id="close-lab" type="button">Close lab</button>
+      </div>
+      <div id="lab-content"></div>
+    </section>
+
+    <footer>
+      <span>Aung Sett Khine · Web Programming</span>
+      <a href="../index.html">Return to the course portfolio</a>
+    </footer>
+  </main>
+  <script src="labs.js" defer></script>
+</body>
+</html>

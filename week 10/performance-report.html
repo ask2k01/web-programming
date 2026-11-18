@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 10 - Performance Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px 60px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #1d4ed8;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2 {
+      color: #172554;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro {
+      color: #475569;
+    }
+
+    section {
+      margin-top: 24px;
+      padding: 22px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border-left: 5px solid #b45309;
+      border-radius: 6px;
+      background: #fffbeb;
+      color: #713f12;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #cbd5e1;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #172554;
+    }
+
+    td[contenteditable="true"] {
+      min-width: 120px;
+      background: #fff;
+    }
+
+    td[contenteditable="true"]:focus {
+      outline: 2px solid #1d4ed8;
+      outline-offset: -2px;
+    }
+
+    ul li + li,
+    ol li + li {
+      margin-top: 8px;
+    }
+
+    @media (max-width: 520px) {
+      section {
+        padding: 17px;
+      }
+
+      th,
+      td {
+        padding: 9px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="index.html">← Week 10</a>
+    <header>
+      <h1>Website Performance Report</h1>
+      <p class="intro">Week 10 · Website Performance</p>
+    </header>
+
+    <section aria-labelledby="measurement-heading">
+      <h2 id="measurement-heading">Measurement status</h2>
+      <p class="notice">No Lighthouse run has been recorded for this local website yet. Scores and metrics are intentionally left blank rather than estimated.</p>
+      <p>Run Lighthouse in Chrome DevTools on the same page and under the same conditions before and after optimizations. Enter your measured values in the table; cells are editable for this session, then save or copy the completed results into your report.</p>
+    </section>
+
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading">Before and after results</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Metric</th>
+              <th scope="col">Before</th>
+              <th scope="col">After</th>
+              <th scope="col">Unit / notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Performance score</th>
+              <td contenteditable="true" aria-label="Before performance score">Enter measured score</td>
+              <td contenteditable="true" aria-label="After performance score">Enter measured score</td>
+              <td>0–100</td>
+            </tr>
+            <tr>
+              <th scope="row">First Contentful Paint</th>
+              <td contenteditable="true" aria-label="Before First Contentful Paint">Enter measured value</td>
+              <td contenteditable="true" aria-label="After First Contentful Paint">Enter measured value</td>
+              <td>Seconds</td>
+            </tr>
+            <tr>
+              <th scope="row">Largest Contentful Paint</th>
+              <td contenteditable="true" aria-label="Before Largest Contentful Paint">Enter measured value</td>
+              <td contenteditable="true" aria-label="After Largest Contentful Paint">Enter measured value</td>
+              <td>Seconds</td>
+            </tr>
+            <tr>
+              <th scope="row">Total Blocking Time</th>
+              <td contenteditable="true" aria-label="Before Total Blocking Time">Enter measured value</td>
+              <td contenteditable="true" aria-label="After Total Blocking Time">Enter measured value</td>
+              <td>Milliseconds</td>
+            </tr>
+            <tr>
+              <th scope="row">Cumulative Layout Shift</th>
+              <td contenteditable="true" aria-label="Before Cumulative Layout Shift">Enter measured value</td>
+              <td contenteditable="true" aria-label="After Cumulative Layout Shift">Enter measured value</td>
+              <td>Unitless</td>
+            </tr>
+            <tr>
+              <th scope="row">Speed Index</th>
+              <td contenteditable="true" aria-label="Before Speed Index">Enter measured value</td>
+              <td contenteditable="true" aria-label="After Speed Index">Enter measured value</td>
+              <td>Seconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="changes-heading">
+      <h2 id="changes-heading">Optimizations demonstrated</h2>
+      <ul>
+        <li><a href="e1.html">Image optimization:</a> image dimensions, eager loading for the first image, lazy loading for later images, and a deferred script.</li>
+        <li><a href="e2.html">Responsive images:</a> WebP sources, JPEG fallback, and width-based responsive candidates.</li>
+        <li><a href="e3.html">Script loading:</a> a live demo comparing async and defer execution behavior.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="steps-heading">
+      <h2 id="steps-heading">How to run the audit</h2>
+      <ol>
+        <li>Open the page you want to measure in Chrome.</li>
+        <li>Open DevTools, select Lighthouse, and choose the Performance category and mobile or desktop mode.</li>
+        <li>Run the audit before making changes and record the score and metrics above.</li>
+        <li>Apply optimizations, run the same audit again, and record the after values.</li>
+        <li>Keep the device mode, browser, network settings, and page content consistent for a fair comparison.</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

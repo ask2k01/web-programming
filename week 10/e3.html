@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 10 E3 - Defer and Async</title>
+  <script async src="async-demo.js"></script>
+  <script defer src="defer-demo.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px 60px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 850px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #1d4ed8;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2 {
+      color: #172554;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro,
+    .notes {
+      color: #475569;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .script-card {
+      padding: 22px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .script-card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    .script-state {
+      min-height: 3em;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #172033;
+      overflow-wrap: anywhere;
+    }
+
+    .notes {
+      margin-top: 24px;
+      padding: 22px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .notes h2 {
+      margin-top: 0;
+    }
+
+    .notes li + li {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="index.html">← Week 10</a>
+    <header>
+      <h1>Defer &amp; Async Scripts</h1>
+      <p class="intro">Both attributes avoid blocking HTML parsing while an external script downloads, but their execution timing and ordering differ.</p>
+    </header>
+
+    <section class="demo-grid" aria-label="Script execution demonstrations">
+      <article class="script-card">
+        <h2>Async script</h2>
+        <p>Executes as soon as its download is ready. It may run before or after HTML parsing completes.</p>
+        <p id="async-result" class="script-state" role="status" aria-live="polite">Waiting for the async script…</p>
+      </article>
+      <article class="script-card">
+        <h2>Deferred script</h2>
+        <p>Executes after HTML parsing and before the <code>DOMContentLoaded</code> event.</p>
+        <p id="defer-result" class="script-state" role="status" aria-live="polite">Waiting for the deferred script…</p>
+      </article>
+    </section>
+
+    <section class="notes" aria-labelledby="difference-heading">
+      <h2 id="difference-heading">What is the difference?</h2>
+      <ul>
+        <li><code>defer</code> preserves document order among deferred scripts and waits until parsing is complete.</li>
+        <li><code>async</code> runs as soon as it is ready; execution order is not guaranteed.</li>
+        <li>Use <code>defer</code> for scripts that depend on the page DOM or on other scripts in order.</li>
+        <li>Use <code>async</code> for independent scripts that do not rely on a particular execution order.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

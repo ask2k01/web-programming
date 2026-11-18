@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 10 E2 - WebP and Responsive Images</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px 60px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #1d4ed8;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2 {
+      color: #172554;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro {
+      color: #475569;
+    }
+
+    .demo-card {
+      margin-top: 24px;
+      padding: clamp(18px, 4vw, 28px);
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    picture,
+    picture img {
+      display: block;
+      width: 100%;
+    }
+
+    picture img {
+      height: auto;
+      border-radius: 10px;
+      background: #e2e8f0;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+
+    .notes li + li {
+      margin-top: 8px;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #e2e8f0;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="index.html">← Week 10</a>
+    <header>
+      <h1>WebP &amp; Responsive Images</h1>
+      <p class="intro">This example offers WebP sources first, JPEG fallbacks, and multiple widths so the browser can choose an appropriate image.</p>
+    </header>
+
+    <section class="demo-card" aria-labelledby="responsive-heading">
+      <h2 id="responsive-heading">A landscape at the right size</h2>
+      <figure>
+        <picture>
+          <source
+            type="image/webp"
+            srcset="
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=webp&amp;w=480&amp;h=270&amp;q=75 480w,
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=webp&amp;w=800&amp;h=450&amp;q=78 800w,
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=webp&amp;w=1200&amp;h=675&amp;q=80 1200w
+            "
+            sizes="(max-width: 700px) calc(100vw - 72px), 800px"
+          >
+          <img
+            src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=jpg&amp;w=800&amp;h=450&amp;q=78"
+            srcset="
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=jpg&amp;w=480&amp;h=270&amp;q=75 480w,
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=jpg&amp;w=800&amp;h=450&amp;q=78 800w,
+              https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&amp;crop=entropy&amp;fm=jpg&amp;w=1200&amp;h=675&amp;q=80 1200w
+            "
+            sizes="(max-width: 700px) calc(100vw - 72px), 800px"
+            alt="Sunlit mountain landscape with a calm lake and open sky"
+            width="1200"
+            height="675"
+            loading="lazy"
+            decoding="async"
+          >
+        </picture>
+        <figcaption>The browser selects a supported format and a suitable width for the display.</figcaption>
+      </figure>
+    </section>
+
+    <section class="demo-card notes" aria-labelledby="how-heading">
+      <h2 id="how-heading">How it works</h2>
+      <ul>
+        <li><code>&lt;source type="image/webp"&gt;</code> offers WebP to browsers that support it.</li>
+        <li>The nested JPEG <code>&lt;img&gt;</code> remains the fallback and also supplies the alternative text.</li>
+        <li><code>srcset</code> and <code>sizes</code> let the browser select an image candidate based on viewport and pixel density.</li>
+        <li>Open the browser's Network panel to inspect the selected format and transferred image size.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

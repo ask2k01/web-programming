@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Week 10 E1 - Image Optimization</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px 60px;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    a {
+      color: #1d4ed8;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #b45309;
+      outline-offset: 3px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2 {
+      color: #172554;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+    }
+
+    .intro,
+    .notes {
+      color: #475569;
+    }
+
+    .photo-card,
+    .notes {
+      margin-top: 24px;
+      padding: clamp(18px, 4vw, 28px);
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    figure + figure {
+      margin-top: 24px;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: #e2e8f0;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+
+    .notes h2 {
+      margin-top: 0;
+    }
+
+    .notes li + li {
+      margin-top: 8px;
+    }
+
+    #script-status {
+      min-height: 1.5em;
+      font-weight: 700;
+    }
+  </style>
+  <script defer src="e1-performance.js"></script>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="index.html">← Week 10</a>
+    <header>
+      <h1>Image Optimization Lab</h1>
+      <p class="intro">Compare eager and lazy image loading, reserve layout space, and check when the deferred script runs.</p>
+    </header>
+
+    <section class="photo-card" aria-labelledby="gallery-heading">
+      <h2 id="gallery-heading">Landscape collection</h2>
+      <figure>
+        <img
+          src="https://picsum.photos/id/1018/1200/800"
+          alt="Mountain lake surrounded by forest"
+          width="1200"
+          height="800"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
+        <figcaption>First image: eager loading for content visible near the top of the page.</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="https://picsum.photos/id/1015/1200/800"
+          alt="Rocky mountain peaks beneath a cloudy sky"
+          width="1200"
+          height="800"
+          loading="lazy"
+          decoding="async"
+        >
+        <figcaption>Second image: lazy loading delays the download until the image approaches the viewport.</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="https://picsum.photos/id/1016/1200/800"
+          alt="Quiet woodland stream running between trees"
+          width="1200"
+          height="800"
+          loading="lazy"
+          decoding="async"
+        >
+        <figcaption>Third image: dimensions reserve space and help prevent layout shifts.</figcaption>
+      </figure>
+    </section>
+
+    <section class="notes" aria-labelledby="optimization-heading">
+      <h2 id="optimization-heading">What to notice</h2>
+      <ul>
+        <li><code>width</code> and <code>height</code> reserve the image's aspect ratio before download.</li>
+        <li><code>loading="lazy"</code> is useful for below-the-fold images; avoid lazy loading the main hero image.</li>
+        <li><code>decoding="async"</code> lets the browser decode images without blocking the next paint.</li>
+        <li>The page's external script uses <code>defer</code> and reports image loading events below.</li>
+      </ul>
+      <p id="script-status" role="status" aria-live="polite">Waiting for the deferred script…</p>
+    </section>
+  </main>
+</body>
+</html>

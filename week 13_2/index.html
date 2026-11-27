@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#122b3a">
+  <meta name="description" content="Week 13_2 React forms patterns and useRef interactive lab.">
+  <title>Week 13_2 | Forms Patterns &amp; useRef</title>
+  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #172936;
+      background: #f1f6f7;
+      --ink: #172936;
+      --muted: #647580;
+      --paper: #fff;
+      --canvas: #f1f6f7;
+      --line: #d7e2e5;
+      --navy: #122b3a;
+      --teal: #0c8b87;
+      --teal-dark: #076c69;
+      --teal-pale: #e2f5f2;
+      --yellow: #f4c95d;
+      --coral: #d65b48;
+      --red: #a63c3c;
+      --green: #18764d;
+      --shadow: 0 12px 30px rgb(18 43 58 / 7%);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 4% 12%, rgb(12 139 135 / 10%), transparent 22rem),
+        var(--canvas);
+      line-height: 1.55;
+    }
+
+    a, button, input, textarea, select { font: inherit; }
+    a { color: var(--teal-dark); }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 3px solid var(--coral);
+      outline-offset: 3px;
+    }
+
+    .page { width: min(1120px, 100%); margin: 0 auto; padding: 22px clamp(16px, 4vw, 48px) 50px; }
+    .topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 25px; }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--navy);
+      font-size: 0.81rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .brand-icon {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      border-radius: 50% 50% 50% 12px;
+      background: var(--yellow);
+      color: var(--navy);
+    }
+
+    .nav-links { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .nav-links a { font-size: 0.86rem; font-weight: 800; text-decoration: none; }
+    .nav-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 136px;
+      align-items: center;
+      gap: 25px;
+      overflow: hidden;
+      margin-bottom: 19px;
+      padding: clamp(26px, 5vw, 46px);
+      border-radius: 25px 25px 70px 25px;
+      background:
+        linear-gradient(125deg, rgb(12 139 135 / 32%), transparent 52%),
+        var(--navy);
+      color: #fff;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      right: -25px;
+      bottom: -180px;
+      width: 360px;
+      height: 360px;
+      border: 1px solid rgb(244 201 93 / 34%);
+      border-radius: 46% 54% 60% 40%;
+      box-shadow: 0 0 0 30px rgb(244 201 93 / 6%), 0 0 0 65px rgb(244 201 93 / 4%);
+      content: "";
+      transform: rotate(-24deg);
+    }
+
+    .eyebrow {
+      margin: 0 0 11px;
+      color: var(--yellow);
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 { max-width: 700px; margin: 0; font-size: clamp(2.2rem, 6vw, 4.2rem); letter-spacing: -0.07em; line-height: 1.03; }
+    .hero-copy { max-width: 650px; margin: 15px 0 0; color: #d7e5e9; }
+    .hero-count {
+      display: grid;
+      width: 118px;
+      height: 118px;
+      place-items: center;
+      justify-self: center;
+      border: 1px solid rgb(255 255 255 / 28%);
+      border-radius: 38% 62% 55% 45%;
+      background: rgb(255 255 255 / 7%);
+      color: var(--yellow);
+      font-size: 2rem;
+      font-weight: 950;
+      transform: rotate(7deg);
+    }
+
+    .notice {
+      margin: 0 0 17px;
+      padding: 12px 15px;
+      border-left: 4px solid var(--teal);
+      border-radius: 0 10px 10px 0;
+      background: var(--paper);
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .lesson-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 15px; }
+    .lesson-card, .takeaways {
+      min-width: 0;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .lesson-card.wide { grid-column: 1 / -1; }
+    .lesson-title-row { display: flex; align-items: flex-start; gap: 11px; margin-bottom: 8px; }
+    .step {
+      display: grid;
+      flex: 0 0 33px;
+      width: 33px;
+      height: 33px;
+      place-items: center;
+      border-radius: 10px 10px 10px 3px;
+      background: var(--teal-pale);
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    h2 { margin: 1px 0 0; color: var(--ink); font-size: 1.12rem; letter-spacing: -0.025em; }
+    .lesson-description { margin: 0 0 14px; color: var(--muted); font-size: 0.87rem; }
+    .demo { padding: 14px; border: 1px solid #d5e8e7; border-radius: 12px; background: #f7fbfb; }
+    .form-stack { display: grid; gap: 11px; }
+    .field { min-width: 0; }
+    .label { display: block; margin: 0 0 5px; color: var(--ink); font-size: 0.83rem; font-weight: 800; }
+    .control {
+      display: block;
+      width: 100%;
+      min-height: 41px;
+      padding: 8px 10px;
+      border: 1px solid #c5d3d8;
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    textarea.control { min-height: 92px; resize: vertical; }
+    .field-error { margin: 4px 0 0; color: var(--red); font-size: 0.78rem; font-weight: 750; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+    .button {
+      min-height: 39px;
+      padding: 8px 13px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--teal-dark);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .button:hover { background: var(--teal); }
+    .button.secondary { border: 1px solid var(--line); background: white; color: var(--ink); }
+    .button.secondary:hover { border-color: var(--teal); }
+    .status { margin: 9px 0 0; color: var(--green); font-size: 0.83rem; font-weight: 800; }
+    .checkbox-group { display: grid; gap: 7px; margin-top: 10px; }
+    .check-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 39px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .check-option input { accent-color: var(--teal-dark); }
+    .counter { margin: 0; color: var(--ink); font-size: 0.84rem; font-weight: 850; }
+    .selection-summary { margin: 8px 0 0; color: var(--muted); font-size: 0.82rem; }
+    .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ref-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ref-box { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+    .ref-box h3 { margin: 0 0 8px; color: var(--teal-dark); font-size: 0.88rem; }
+    .ref-note { margin: 8px 0 0; color: var(--muted); font-size: 0.78rem; }
+    .success-panel { padding: 14px; border: 1px solid #b9dfc9; border-radius: 10px; background: #f0faf4; color: #205a3a; }
+    .success-panel p { margin: 0 0 10px; }
+
+    .code-toggle { margin-top: 11px; border-top: 1px solid var(--line); padding-top: 9px; }
+    .code-toggle summary { width: fit-content; color: var(--teal-dark); font-size: 0.79rem; font-weight: 850; cursor: pointer; }
+    pre {
+      max-width: 100%;
+      margin: 9px 0 0;
+      padding: 11px;
+      overflow: auto;
+      border-radius: 9px;
+      background: var(--navy);
+      color: #f3fbfc;
+      font-size: 0.74rem;
+      line-height: 1.55;
+      white-space: pre;
+    }
+
+    code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .takeaways { margin-top: 18px; }
+    .takeaways > p { margin: 5px 0 15px; color: var(--muted); font-size: 0.87rem; }
+    .takeaway-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .takeaway {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #f8fbfb;
+    }
+
+    .takeaway h3 { margin: 0 0 7px; color: var(--teal-dark); font-size: 0.84rem; }
+    .takeaway p { margin: 0; color: var(--muted); font-size: 0.78rem; }
+    .takeaway pre { margin-top: 8px; font-size: 0.68rem; }
+    footer { margin-top: 23px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.81rem; }
+
+    @media (max-width: 780px) {
+      .takeaway-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .hero { grid-template-columns: 1fr; border-radius: 20px 20px 45px 20px; }
+      .hero-count { width: 78px; height: 78px; justify-self: start; font-size: 1.45rem; transform: none; }
+      .lesson-grid { grid-template-columns: 1fr; }
+      .lesson-card.wide { grid-column: auto; }
+      .ref-layout { grid-template-columns: 1fr; }
+      .lesson-card, .takeaways { padding: 15px; }
+    }
+
+    @media (max-width: 430px) {
+      .page { padding-inline: 14px; }
+      .select-row, .takeaway-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="forms-patterns-root"></div>
+  <script type="text/babel">
+    const { useRef, useState } = React;
+    const INTERESTS = ["React", "Accessibility", "UI design", "Testing"];
+    const EMPTY_CONTACT = { name: "", email: "" };
+
+    function LessonCard({ step, title, description, snippet, className = "", children }) {
+      return (
+        <section className={`lesson-card ${className}`} aria-labelledby={`lesson-title-${step}`}>
+          <div className="lesson-title-row">
+            <span className="step" aria-hidden="true">{step}</span>
+            <h2 id={`lesson-title-${step}`}>{title}</h2>
+          </div>
+          <p className="lesson-description">{description}</p>
+          <div className="demo">{children}</div>
+          <details className="code-toggle">
+            <summary>View the React pattern</summary>
+            <pre><code>{snippet}</code></pre>
+          </details>
+        </section>
+      );
+    }
+
+    function ContactFormDemo() {
+      const [form, setForm] = useState(EMPTY_CONTACT);
+      const [errors, setErrors] = useState({});
+      const [submitted, setSubmitted] = useState(false);
+
+      function handleChange(event) {
+        const { name, value } = event.target;
+        setForm(previous => ({ ...previous, [name]: value }));
+        setErrors(previous => ({ ...previous, [name]: "" }));
+        setSubmitted(false);
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault();
+        const nextErrors = {};
+        if (!form.name.trim()) nextErrors.name = "Name is required.";
+        if (!form.email.trim()) {
+          nextErrors.email = "Email is required.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+          nextErrors.email = "Enter a valid email address.";
+        }
+
+        setErrors(nextErrors);
+        if (Object.keys(nextErrors).length > 0) return;
+
+        setForm(EMPTY_CONTACT);
+        setSubmitted(true);
+      }
+
+      if (submitted) {
+        return (
+          <div className="success-panel" role="status" aria-live="polite">
+            <p>Your form was submitted successfully. The controlled fields were reset.</p>
+            <button className="button secondary" type="button" onClick={() => setSubmitted(false)}>Send another</button>
+          </div>
+        );
+      }
+
+      return (
+        <form className="form-stack" onSubmit={handleSubmit} noValidate>
+          <div className="field">
+            <label className="label" htmlFor="demo-name">Name</label>
+            <input
+              className="control"
+              id="demo-name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={errors.name ? "demo-name-error" : undefined}
+            />
+            {errors.name && <p className="field-error" id="demo-name-error" role="alert">{errors.name}</p>}
+          </div>
+          <div className="field">
+            <label className="label" htmlFor="demo-email">Email</label>
+            <input
+              className="control"
+              id="demo-email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "demo-email-error" : undefined}
+            />
+            {errors.email && <p className="field-error" id="demo-email-error" role="alert">{errors.email}</p>}
+          </div>
+          <button className="button" type="submit">Submit form</button>
+        </form>
+      );
+    }
+
+    function InterestPicker() {
+      const [selected, setSelected] = useState([]);
+
+      function toggleInterest(interest, checked) {
+        setSelected(previous => checked
+          ? previous.includes(interest) ? previous : [...previous, interest]
+          : previous.filter(item => item !== interest)
+        );
+      }
+
+      return (
+        <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
+          <legend className="label">Choose topics you want to study</legend>
+          <p className="counter" aria-live="polite">Selected: {selected.length}</p>
+          <div className="checkbox-group">
+            {INTERESTS.map(interest => (
+              <label className="check-option" key={interest}>
+                <input
+                  type="checkbox"
+                  checked={selected.includes(interest)}
+                  onChange={event => toggleInterest(interest, event.target.checked)}
+                />
+                {interest}
+              </label>
+            ))}
+          </div>
+          <p className="selection-summary">
+            {selected.length ? selected.join(" · ") : "Your selected topics will appear here."}
+          </p>
+        </fieldset>
+      );
+    }
+
+    function CourseNoteDemo() {
+      const [course, setCourse] = useState("");
+      const [note, setNote] = useState("");
+      const MAX_NOTE = 160;
+
+      return (
+        <div className="form-stack">
+          <div className="select-row">
+            <div className="field">
+              <label className="label" htmlFor="course-select">Course</label>
+              <select className="control" id="course-select" value={course} onChange={event => setCourse(event.target.value)}>
+                <option value="">Choose a course</option>
+                <option value="react">React</option>
+                <option value="web-accessibility">Web accessibility</option>
+                <option value="javascript">JavaScript</option>
+              </select>
+            </div>
+            <div className="field">
+              <span className="label">Current selection</span>
+              <p className="selection-summary" aria-live="polite">{course || "Nothing selected yet"}</p>
+            </div>
+          </div>
+          <div className="field">
+            <label className="label" htmlFor="course-note">Study note</label>
+            <textarea
+              className="control"
+              id="course-note"
+              value={note}
+              onChange={event => setNote(event.target.value.slice(0, MAX_NOTE))}
+              maxLength={MAX_NOTE}
+              rows={3}
+              placeholder="Write a short note..."
+            />
+            <p className="selection-summary" aria-live="polite">{note.length} / {MAX_NOTE} characters</p>
+          </div>
+        </div>
+      );
+    }
+
+    function RefToolsDemo() {
+      const nameInputRef = useRef(null);
+      const fileInputRef = useRef(null);
+      const [fileName, setFileName] = useState("");
+
+      function focusNameInput() {
+        if (nameInputRef.current) nameInputRef.current.focus();
+      }
+
+      function readFileFromRef() {
+        const file = fileInputRef.current && fileInputRef.current.files[0];
+        setFileName(file ? file.name : "No file selected");
+      }
+
+      return (
+        <div className="ref-layout">
+          <div className="ref-box">
+            <h3>Focus a DOM element</h3>
+            <label className="label" htmlFor="ref-focus-name">Name field</label>
+            <input className="control" id="ref-focus-name" ref={nameInputRef} placeholder="Click the button to focus me" />
+            <div className="button-row">
+              <button className="button" type="button" onClick={focusNameInput}>Focus name field</button>
+            </div>
+            <p className="ref-note">The ref points directly to the input element.</p>
+          </div>
+          <div className="ref-box">
+            <h3>Read a file input</h3>
+            <label className="label" htmlFor="ref-photo">Choose a file</label>
+            <input className="control" id="ref-photo" type="file" ref={fileInputRef} onChange={readFileFromRef} />
+            <p className="selection-summary" aria-live="polite">{fileName || "No file selected"}</p>
+            <p className="ref-note">The change handler reads <code>files[0]</code> through the ref.</p>
+          </div>
+        </div>
+      );
+    }
+
+    function Takeaway({ title, text, code }) {
+      return (
+        <article className="takeaway">
+          <h3>{title}</h3>
+          <p>{text}</p>
+          {code && <pre><code>{code}</code></pre>}
+        </article>
+      );
+    }
+
+    function FormsPatternsLab() {
+      return (
+        <main className="page">
+          <nav className="topbar" aria-label="Page navigation">
+            <a className="brand" href="../index.html"><span className="brand-icon" aria-hidden="true">A</span> Aung Sett Khine</a>
+            <div className="nav-links">
+              <a href="../index.html">Portfolio</a>
+              <a href="../week%2013_1/index.html">Week 13_1 · Forms</a>
+            </div>
+          </nav>
+
+          <header className="hero">
+            <div>
+              <p className="eyebrow">Week 13_2 · React patterns</p>
+              <h1>Forms, state &amp; refs.</h1>
+              <p className="hero-copy">Practice reliable form patterns: controlled values, one change handler, validation, checkbox arrays, selects, textareas, and DOM refs.</p>
+            </div>
+            <div className="hero-count" aria-label="Four interactive examples">04</div>
+          </header>
+
+          <p className="notice"><strong>Remember:</strong> controlled values should start as a string, boolean, or array—not <code>null</code> or <code>undefined</code>. Try each demo and open its code pattern.</p>
+
+          <div className="lesson-grid">
+            <LessonCard
+              step="01"
+              title="One handler, many fields"
+              description="Name each input, bind its value to state, then update the matching key. Submit without reloading and show field errors."
+              snippet={`const [form, setForm] = useState({ name: "", email: "" });
+function handleChange(event) {
+  const { name, value } = event.target;
+  setForm(previous => ({ ...previous, [name]: value }));
+}
+function handleSubmit(event) {
+  event.preventDefault();
+  // validate, then submit
+}`}
+            >
+              <ContactFormDemo />
+            </LessonCard>
+
+            <LessonCard
+              step="02"
+              title="Checkboxes are arrays"
+              description="Use checked and event.target.checked. Add selected options immutably, or filter one out when unchecked."
+              snippet={`const [selected, setSelected] = useState([]);
+<input
+  type="checkbox"
+  checked={selected.includes(topic)}
+  onChange={event =>
+    toggleTopic(topic, event.target.checked)
+  }
+/>`}
+            >
+              <InterestPicker />
+            </LessonCard>
+
+            <LessonCard
+              step="03"
+              title="Select & textarea"
+              description="Select and textarea elements use the same value plus onChange pattern as text inputs."
+              snippet={`<select value={course}
+  onChange={event => setCourse(event.target.value)}
+>
+  <option value="react">React</option>
+</select>
+<textarea value={note}
+  onChange={event => setNote(event.target.value)}
+/>`}
+            >
+              <CourseNoteDemo />
+            </LessonCard>
+
+            <LessonCard
+              step="04"
+              title="useRef for DOM access"
+              description="Focus an element or inspect a file input without keeping the DOM node in state. Updating ref.current does not trigger a render."
+              snippet={`const inputRef = useRef(null);
+function focusInput() {
+  inputRef.current?.focus();
+}
+
+const file = fileInputRef.current?.files[0];`}
+            >
+              <RefToolsDemo />
+            </LessonCard>
+          </div>
+
+          <section className="takeaways" aria-labelledby="takeaways-title">
+            <h2 id="takeaways-title">Key takeaways</h2>
+            <p>Keep this short checklist nearby as you build your own forms.</p>
+            <div className="takeaway-grid">
+              <Takeaway title="Controlled inputs" text="Bind value to state and update it in onChange. Initialize values; don't switch from null to a string." code={`const [name, setName] = useState("");`} />
+              <Takeaway title="One change handler" text="Use the input's name to update just one property in a multi-field object." code={`setForm(prev => ({ ...prev, [name]: value }));`} />
+              <Takeaway title="Prevent reload" text="Call preventDefault before your submit logic so the page stays in place." code={`function submit(event) {
+  event.preventDefault();
+}`} />
+              <Takeaway title="Validate per field" text="Build an errors object and show each message beside its input." code={`if (!email) errors.email = "Required";`} />
+              <Takeaway title="Checkboxes" text="Use checked and event.target.checked. Store multi-select choices in an array." code={`checked={selected.includes(item)}`} />
+              <Takeaway title="Select & textarea" text="Both use the same controlled value and onChange pattern." />
+              <Takeaway title="useRef" text="Use refs for focus, file inputs, or external DOM integrations. Ref changes alone don't re-render." code={`const inputRef = useRef(null);
+inputRef.current?.focus();`} />
+            </div>
+          </section>
+
+          <footer>Week 13_2 · React forms patterns and useRef. Each demo runs locally in your browser.</footer>
+        </main>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("forms-patterns-root")).render(<FormsPatternsLab />);
+  </script>
+</body>
+</html>

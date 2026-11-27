@@ -302,6 +302,139 @@
     .success-panel h3 { margin: 0 0 5px; }
     .success-panel p { margin: 0 0 12px; }
 
+    .homework-section {
+      margin-top: 20px;
+      padding: clamp(18px, 3vw, 26px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .homework-heading { margin-bottom: 16px; }
+    .homework-heading h2 { font-size: 1.45rem; }
+    .homework-heading p { max-width: 720px; margin: 7px 0 0; color: var(--muted); font-size: 0.88rem; }
+    .profile-editor-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(270px, 0.85fr);
+      align-items: start;
+      gap: 18px;
+    }
+
+    .profile-form {
+      display: grid;
+      gap: 13px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fcfbff;
+    }
+
+    .profile-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .profile-field-wide { grid-column: 1 / -1; }
+    .profile-fields select { appearance: auto; }
+    .required-mark { color: var(--red); }
+    .radio-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .radio-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--paper);
+      font-size: 0.83rem;
+      cursor: pointer;
+    }
+
+    .radio-option input { accent-color: var(--purple-dark); }
+    .photo-preview-row { display: flex; align-items: center; gap: 11px; margin-top: 9px; }
+    .photo-thumbnail {
+      width: 58px;
+      height: 58px;
+      flex: 0 0 58px;
+      border-radius: 13px;
+      object-fit: cover;
+    }
+
+    .photo-name { margin: 0; overflow-wrap: anywhere; color: var(--muted); font-size: 0.78rem; }
+    .skill-entry { display: flex; gap: 8px; }
+    .skill-entry .text-input { flex: 1; min-width: 0; }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+    .profile-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px 5px 10px;
+      border-radius: 999px;
+      background: var(--purple-soft);
+      color: var(--purple-dark);
+      font-size: 0.79rem;
+      font-weight: 800;
+    }
+
+    .tag-remove {
+      display: inline-grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgb(76 53 179 / 12%);
+      color: var(--purple-dark);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .tag-remove:hover { background: rgb(76 53 179 / 23%); }
+    .profile-preview-shell { padding: 16px; border-radius: 16px; background: var(--dark); }
+    .profile-preview-label {
+      margin: 0 0 10px;
+      color: #aab8dc;
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .student-preview {
+      display: flex;
+      flex-direction: column;
+      min-height: 290px;
+      padding: 18px;
+      border-radius: 13px;
+      background: var(--paper);
+    }
+
+    .student-preview.empty { display: grid; place-items: center; text-align: center; }
+    .preview-empty-mark, .student-avatar {
+      display: grid;
+      width: 74px;
+      height: 74px;
+      flex: 0 0 74px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 50%;
+      background: #315f8a;
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .preview-empty-mark { margin: 0 auto 13px; opacity: 0.78; }
+    .preview-empty-copy { max-width: 210px; margin: 0 auto; color: var(--muted); font-size: 0.84rem; }
+    .student-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .student-preview-top { display: flex; align-items: flex-start; gap: 13px; }
+    .student-preview-name { margin: 7px 0 2px; color: var(--ink); font-size: 1.15rem; line-height: 1.25; }
+    .student-preview-meta { margin: 0; color: var(--muted); font-size: 0.84rem; }
+    .student-preview-major { margin: 2px 0 0; color: #087c86; font-size: 0.84rem; font-weight: 850; }
+    .student-preview-bio { margin: 16px 0 0; color: #45516a; font-size: 0.86rem; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .student-preview-skills { margin-top: auto; padding-top: 18px; }
+    .student-preview-skills .profile-tags { margin-top: 0; }
+    .student-preview-skills .profile-tag { background: #eef7f1; color: #18764d; }
+
     .code-details { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
     .code-details summary { width: fit-content; color: var(--purple-dark); font-size: 0.8rem; font-weight: 850; cursor: pointer; }
 
@@ -350,18 +483,22 @@
       .demo-grid { grid-template-columns: 1fr; }
       .contact-card { grid-column: auto; }
       .demo-card, .cheat-sheet { padding: 16px; }
+      .profile-editor-layout { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 420px) {
       .page { padding-inline: 14px; }
       .checkbox-list, .cheat-grid { grid-template-columns: 1fr; }
+      .profile-fields { grid-template-columns: 1fr; }
+      .profile-field-wide { grid-column: auto; }
+      .skill-entry { align-items: stretch; flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <div id="forms-root"></div>
   <script type="text/babel">
-    const { useState } = React;
+    const { useEffect, useState } = React;
     const MAX_BIO_LENGTH = 200;
     const SKILLS = ["HTML", "CSS", "JavaScript", "React", "Node.js", "Python"];
 
@@ -541,6 +678,314 @@
       );
     }
 
+    const EMPTY_PROFILE = {
+      name: "",
+      studentId: "",
+      major: "",
+      year: "",
+      bio: "",
+      photo: null
+    };
+
+    function StudentProfileEditor() {
+      const [profile, setProfile] = useState(EMPTY_PROFILE);
+      const [errors, setErrors] = useState({});
+      const [photoPreview, setPhotoPreview] = useState("");
+      const [skillInput, setSkillInput] = useState("");
+      const [skills, setSkills] = useState([]);
+      const [submitted, setSubmitted] = useState(false);
+
+      useEffect(() => {
+        if (!profile.photo || !profile.photo.type.startsWith("image/")) {
+          setPhotoPreview("");
+          return undefined;
+        }
+
+        const previewUrl = URL.createObjectURL(profile.photo);
+        setPhotoPreview(previewUrl);
+        return () => URL.revokeObjectURL(previewUrl);
+      }, [profile.photo]);
+
+      function handleChange(event) {
+        const { name, value } = event.target;
+        const nextValue = name === "photo"
+          ? (event.target.files ? event.target.files[0] : null)
+          : value;
+
+        setProfile(previous => ({ ...previous, [name]: nextValue }));
+        setErrors(previous => ({ ...previous, [name]: "" }));
+        setSubmitted(false);
+      }
+
+      function addSkill() {
+        const skill = skillInput.trim();
+        if (!skill) return;
+
+        if (!skills.some(existing => existing.toLowerCase() === skill.toLowerCase())) {
+          setSkills(previous => [...previous, skill]);
+        }
+        setSkillInput("");
+        setSubmitted(false);
+      }
+
+      function handleSkillKeyDown(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addSkill();
+        }
+      }
+
+      function removeSkill(skillToRemove) {
+        setSkills(previous => previous.filter(skill => skill !== skillToRemove));
+        setSubmitted(false);
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault();
+        const nextErrors = {};
+
+        if (!profile.name.trim()) nextErrors.name = "Name is required.";
+        if (!/^\d{10}$/.test(profile.studentId)) {
+          nextErrors.studentId = "Student ID must contain exactly 10 digits.";
+        }
+        if (!profile.major) nextErrors.major = "Choose a major.";
+        if (!profile.year) nextErrors.year = "Choose your year.";
+        if (!profile.bio.trim()) {
+          nextErrors.bio = "Bio is required.";
+        } else if (profile.bio.length >= 200) {
+          nextErrors.bio = "Bio must be fewer than 200 characters.";
+        }
+        if (!profile.photo) {
+          nextErrors.photo = "Choose a profile photo.";
+        } else if (!profile.photo.type.startsWith("image/")) {
+          nextErrors.photo = "Choose an image file.";
+        }
+
+        setErrors(nextErrors);
+        if (Object.keys(nextErrors).length > 0) {
+          setSubmitted(false);
+          return;
+        }
+
+        setSubmitted(true);
+      }
+
+      const initials = profile.name.trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0))
+        .join("")
+        .toUpperCase();
+
+      return (
+        <section className="homework-section" aria-labelledby="profile-homework-title">
+          <div className="homework-heading">
+            <p className="eyebrow" style={{ color: "var(--purple-dark)", marginBottom: 6 }}>Applied homework</p>
+            <h2 id="profile-homework-title">Student Profile Editor</h2>
+            <p>Complete every field, validate the student details, and create a profile preview. Add skills as tags for the stretch goal.</p>
+          </div>
+
+          <div className="profile-editor-layout">
+            <form className="profile-form" onSubmit={handleSubmit} noValidate>
+              <div className="profile-fields">
+                <div className="field">
+                  <label className="field-label" htmlFor="profile-name">Full name <span className="required-mark" aria-hidden="true">*</span></label>
+                  <input
+                    className="text-input"
+                    id="profile-name"
+                    name="name"
+                    value={profile.name}
+                    onChange={handleChange}
+                    required
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? "profile-error-name" : undefined}
+                  />
+                  {errors.name && <p className="field-error" id="profile-error-name" role="alert">{errors.name}</p>}
+                </div>
+
+                <div className="field">
+                  <label className="field-label" htmlFor="profile-student-id">Student ID <span className="required-mark" aria-hidden="true">*</span></label>
+                  <input
+                    className="text-input"
+                    id="profile-student-id"
+                    name="studentId"
+                    value={profile.studentId}
+                    onChange={handleChange}
+                    inputMode="numeric"
+                    maxLength={10}
+                    required
+                    aria-invalid={Boolean(errors.studentId)}
+                    aria-describedby={errors.studentId ? "profile-error-student-id" : "student-id-help"}
+                  />
+                  <p className="helper" id="student-id-help">Enter exactly 10 digits.</p>
+                  {errors.studentId && <p className="field-error" id="profile-error-student-id" role="alert">{errors.studentId}</p>}
+                </div>
+
+                <div className="field">
+                  <label className="field-label" htmlFor="profile-major">Major <span className="required-mark" aria-hidden="true">*</span></label>
+                  <select
+                    className="text-input"
+                    id="profile-major"
+                    name="major"
+                    value={profile.major}
+                    onChange={handleChange}
+                    required
+                    aria-invalid={Boolean(errors.major)}
+                    aria-describedby={errors.major ? "profile-error-major" : undefined}
+                  >
+                    <option value="">Select a major</option>
+                    <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Cybersecurity">Cybersecurity</option>
+                  </select>
+                  {errors.major && <p className="field-error" id="profile-error-major" role="alert">{errors.major}</p>}
+                </div>
+
+                <fieldset
+                  className="field profile-field-wide"
+                  style={{ border: 0, margin: 0, padding: 0 }}
+                  aria-describedby={errors.year ? "profile-error-year" : undefined}
+                >
+                  <legend className="field-label">Year <span className="required-mark" aria-hidden="true">*</span></legend>
+                  <div className="radio-list">
+                    {[1, 2, 3, 4].map(year => (
+                      <label className="radio-option" key={year}>
+                        <input
+                          type="radio"
+                          name="year"
+                          value={String(year)}
+                          checked={profile.year === String(year)}
+                          onChange={handleChange}
+                        />
+                        Year {year}
+                      </label>
+                    ))}
+                  </div>
+                  {errors.year && <p className="field-error" id="profile-error-year" role="alert">{errors.year}</p>}
+                </fieldset>
+
+                <div className="field profile-field-wide">
+                  <label className="field-label" htmlFor="profile-bio">Bio <span className="required-mark" aria-hidden="true">*</span></label>
+                  <textarea
+                    id="profile-bio"
+                    name="bio"
+                    value={profile.bio}
+                    onChange={handleChange}
+                    rows={4}
+                    maxLength={199}
+                    required
+                    aria-invalid={Boolean(errors.bio)}
+                    aria-describedby={errors.bio ? "profile-error-bio profile-bio-count" : "profile-bio-count"}
+                  />
+                  <p className={`char-count ${profile.bio.length > 180 ? "warning" : "normal"}`} id="profile-bio-count" aria-live="polite">
+                    {profile.bio.length} / 200
+                  </p>
+                  {errors.bio && <p className="field-error" id="profile-error-bio" role="alert">{errors.bio}</p>}
+                </div>
+
+                <div className="field profile-field-wide">
+                  <label className="field-label" htmlFor="profile-photo">Photo <span className="required-mark" aria-hidden="true">*</span></label>
+                  <input
+                    className="text-input"
+                    id="profile-photo"
+                    name="photo"
+                    type="file"
+                    accept="image/*"
+                    required
+                    onChange={handleChange}
+                    aria-invalid={Boolean(errors.photo)}
+                    aria-describedby={errors.photo ? "profile-error-photo" : "profile-photo-help"}
+                  />
+                  <p className="helper" id="profile-photo-help">Choose an image file. It will be previewed here before submission.</p>
+                  {errors.photo && <p className="field-error" id="profile-error-photo" role="alert">{errors.photo}</p>}
+                  {photoPreview && (
+                    <div className="photo-preview-row">
+                      <img className="photo-thumbnail" src={photoPreview} alt="Selected profile preview" />
+                      <p className="photo-name">{profile.photo.name}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="field">
+                <label className="field-label" htmlFor="profile-skill">Skills <span style={{ color: "var(--muted)", fontWeight: 500 }}>(stretch goal)</span></label>
+                <div className="skill-entry">
+                  <input
+                    className="text-input"
+                    id="profile-skill"
+                    value={skillInput}
+                    onChange={event => setSkillInput(event.target.value)}
+                    onKeyDown={handleSkillKeyDown}
+                    placeholder="Type a skill and press Enter"
+                  />
+                  <button className="button secondary" type="button" onClick={addSkill}>Add skill</button>
+                </div>
+                {skills.length > 0 && (
+                  <div className="profile-tags" aria-label="Added skills">
+                    {skills.map(skill => (
+                      <span className="profile-tag" key={skill}>
+                        {skill}
+                        <button
+                          className="tag-remove"
+                          type="button"
+                          aria-label={`Remove ${skill}`}
+                          onClick={() => removeSkill(skill)}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="button-row">
+                <button className="button" type="submit">Create profile preview</button>
+              </div>
+              {submitted && <p className="counter" role="status">Profile preview created successfully.</p>}
+            </form>
+
+            <aside className="profile-preview-shell" aria-label="Student profile preview">
+              <p className="profile-preview-label">Profile preview</p>
+              {submitted ? (
+                <article className="student-preview">
+                  <div className="student-preview-top">
+                    <div className="student-avatar">
+                      <img src={photoPreview} alt={`${profile.name}'s profile`} />
+                    </div>
+                    <div>
+                      <h3 className="student-preview-name">{profile.name.trim()}</h3>
+                      <p className="student-preview-meta">ID {profile.studentId} · Year {profile.year}</p>
+                      <p className="student-preview-major">{profile.major}</p>
+                    </div>
+                  </div>
+                  <p className="student-preview-bio">{profile.bio}</p>
+                  <div className="student-preview-skills">
+                    {skills.length > 0 ? (
+                      <div className="profile-tags" aria-label="Profile skills">
+                        {skills.map(skill => <span className="profile-tag" key={skill}>{skill}</span>)}
+                      </div>
+                    ) : (
+                      <p className="student-preview-meta">No skills added yet.</p>
+                    )}
+                  </div>
+                </article>
+              ) : (
+                <div className="student-preview empty">
+                  <div>
+                    <div className="preview-empty-mark" aria-hidden="true">SP</div>
+                    <p className="preview-empty-copy">Complete the required fields and submit to see the profile card.</p>
+                  </div>
+                </div>
+              )}
+            </aside>
+          </div>
+        </section>
+      );
+    }
+
     function CheatCard({ title, code }) {
       return (
         <article className="cheat-card">
@@ -567,12 +1012,12 @@
               <h1>Build forms that respond.</h1>
               <p className="hero-copy">Practice controlled text, field validation, and checkbox selections with live feedback in React.</p>
             </div>
-            <div className="hero-stat" aria-label="3 interactive exercises">
-              <strong>03</strong><span>interactive exercises</span>
+            <div className="hero-stat" aria-label="4 interactive forms activities">
+              <strong>04</strong><span>forms &amp; profile editor</span>
             </div>
           </header>
 
-          <p className="intro-note">Try each form, then expand “Show React pattern” to review the component logic. The contact form is a local demo and does not send data.</p>
+          <p className="intro-note">Try the three form exercises, then build a student profile with required fields, validation, a photo preview, and optional skill tags. The contact form is a local demo and does not send data.</p>
 
           <div className="demo-grid">
             <DemoCard
@@ -628,6 +1073,8 @@ function toggle(skill, checked) {
               <SkillPicker />
             </DemoCard>
           </div>
+
+          <StudentProfileEditor />
 
           <section className="cheat-sheet" aria-labelledby="cheat-sheet-heading">
             <h2 id="cheat-sheet-heading">React Forms cheat sheet</h2>

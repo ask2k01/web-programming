@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <meta name="description" content="Week 12_1 Exercise 2 demonstrates adding and removing tasks with React state.">
+  <title>Week 12_1 Exercise 2 | Task List</title>
+  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+      --ink: #24243a;
+      --muted: #6f7081;
+      --paper: #fff;
+      --line: #e7e5df;
+      --purple: #6e55d9;
+      --purple-dark: #4c35b3;
+      --purple-soft: #f0edff;
+      --lime: #d7f36a;
+      --dark: #17172b;
+      --orange: #e87b50;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px clamp(16px, 5vw, 56px) 48px;
+      background:
+        radial-gradient(ellipse at 92% 10%, rgb(215 243 106 / 20%), transparent 24rem),
+        #f7f6f2;
+      line-height: 1.6;
+    }
+
+    a, button, input { font: inherit; }
+    a { color: var(--purple-dark); }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+    }
+
+    main { width: min(100%, 900px); margin: 0 auto; }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      color: var(--dark);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+    .page-links a { font-size: 0.9rem; font-weight: 800; text-decoration: none; }
+    .page-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    .hero {
+      padding: clamp(26px, 6vw, 48px);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 90% 14%, rgb(110 85 217 / 42%), transparent 17rem),
+        var(--dark);
+      color: #fff;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--lime);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 680px;
+      margin: 0;
+      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      letter-spacing: -0.07em;
+      line-height: 1.04;
+    }
+
+    .intro { max-width: 620px; margin: 16px 0 0; color: #e2e0ed; }
+
+    .content-panel {
+      margin-top: 20px;
+      padding: clamp(20px, 4vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: 0 14px 36px rgb(36 36 58 / 7%);
+    }
+
+    h2 { margin: 0 0 8px; color: var(--dark); font-size: 1.35rem; letter-spacing: -0.04em; }
+    .panel-copy { margin: 0 0 18px; color: var(--muted); }
+
+    .task-demo {
+      padding: 22px;
+      border: 1px solid #ded9f7;
+      border-radius: 16px;
+      background: #faf9ff;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .task-form { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .task-input {
+      flex: 1 1 220px;
+      min-width: 0;
+      min-height: 46px;
+      padding: 10px 13px;
+      border: 1px solid #c9c4dd;
+      border-radius: 11px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .add-button {
+      min-height: 46px;
+      padding: 10px 20px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--purple-dark);
+      color: #fff;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .add-button:hover { background: var(--purple); }
+
+    .task-list {
+      display: grid;
+      gap: 9px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px 11px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      overflow-wrap: anywhere;
+    }
+
+    .remove-button {
+      flex: 0 0 auto;
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid #f0d1cb;
+      border-radius: 10px;
+      background: #fff6f3;
+      color: #9f4b39;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .remove-button:hover { background: #ffe8e1; }
+    .empty-message { margin: 18px 0 0; color: var(--muted); }
+
+    pre {
+      max-width: 100%;
+      margin: 18px 0 0;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 12px;
+      background: var(--dark);
+      color: #fff;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+
+    code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .load-status { margin: 12px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    @media (max-width: 480px) {
+      .hero { border-radius: 20px; }
+      .task-demo { padding: 16px; }
+      .add-button { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="topbar" aria-label="Page navigation">
+      <a class="brand" href="../index.html">Aung Sett Khine · Web Programming</a>
+      <div class="page-links">
+        <a href="index.html">Shopping cart</a>
+        <a href="exercise%201.html">Exercise 1</a>
+        <a href="exercise%203.html">Exercise 3</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Week 12_1 · Exercise 2</p>
+      <h1>Make a task list with state.</h1>
+      <p class="intro">Add tasks to a React array, then remove an item when it is done.</p>
+    </header>
+
+    <section class="content-panel" aria-labelledby="demo-heading">
+      <h2 id="demo-heading">Your task list</h2>
+      <p class="panel-copy">Type a task and choose Add. Blank entries are ignored.</p>
+      <div id="task-root"></div>
+      <p class="load-status" id="load-status" role="status" aria-live="polite">Loading React…</p>
+    </section>
+
+    <section class="content-panel" aria-labelledby="code-heading">
+      <h2 id="code-heading">Component code</h2>
+      <pre><code>function TaskList() {
+  const [tasks, setTasks] = useState([]);
+  const [input, setInput] = useState('');
+
+  function addTask() {
+    if (!input.trim()) return;
+    setTasks(prev =&gt; [...prev, { id: Date.now(), text: input.trim() }]);
+    setInput('');
+  }
+
+  function removeTask(id) {
+    setTasks(prev =&gt; prev.filter(task =&gt; task.id !== id));
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;input value={input} onChange={event =&gt; setInput(event.target.value)} /&gt;
+      &lt;button onClick={addTask}&gt;Add&lt;/button&gt;
+      &lt;ul&gt;
+        {tasks.map(task =&gt; (
+          &lt;li key={task.id}&gt;
+            {task.text}
+            &lt;button onClick={() =&gt; removeTask(task.id)}&gt;✕&lt;/button&gt;
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+    </section>
+  </main>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function TaskList() {
+      const [tasks, setTasks] = useState([]);
+      const [input, setInput] = useState("");
+
+      function addTask(event) {
+        event.preventDefault();
+        const text = input.trim();
+        if (!text) return;
+        setTasks(prev => [...prev, { id: Date.now(), text }]);
+        setInput("");
+      }
+
+      function removeTask(id) {
+        setTasks(prev => prev.filter(task => task.id !== id));
+      }
+
+      return (
+        <div className="task-demo">
+          <form className="task-form" onSubmit={addTask}>
+            <label className="sr-only" htmlFor="new-task">New task</label>
+            <input
+              className="task-input"
+              id="new-task"
+              value={input}
+              onChange={event => setInput(event.target.value)}
+              placeholder="New task"
+            />
+            <button className="add-button" type="submit">Add</button>
+          </form>
+          {tasks.length === 0 ? (
+            <p className="empty-message">No tasks yet. Add one to get started.</p>
+          ) : (
+            <ul className="task-list" aria-label="Tasks">
+              {tasks.map(task => (
+                <li className="task-row" key={task.id}>
+                  <span>{task.text}</span>
+                  <button
+                    className="remove-button"
+                    type="button"
+                    aria-label={`Remove ${task.text}`}
+                    onClick={() => removeTask(task.id)}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("task-root")).render(<TaskList />);
+    document.getElementById("load-status").textContent =
+      "React is ready. Add a task, or try submitting an empty input.";
+  </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17172b">
+  <meta name="description" content="Week 12_1 Exercise 1 demonstrates a React boolean state toggle.">
+  <title>Week 12_1 Exercise 1 | Toggle Details</title>
+  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24243a;
+      background: #f7f6f2;
+      --ink: #24243a;
+      --muted: #6f7081;
+      --paper: #fff;
+      --line: #e7e5df;
+      --purple: #6e55d9;
+      --purple-dark: #4c35b3;
+      --purple-soft: #f0edff;
+      --lime: #d7f36a;
+      --dark: #17172b;
+      --orange: #e87b50;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px clamp(16px, 5vw, 56px) 48px;
+      background:
+        radial-gradient(ellipse at 92% 10%, rgb(215 243 106 / 20%), transparent 24rem),
+        #f7f6f2;
+      line-height: 1.6;
+    }
+
+    a,
+    button {
+      font: inherit;
+    }
+
+    a {
+      color: var(--purple-dark);
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 4px;
+    }
+
+    main {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      color: var(--dark);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .hero {
+      padding: clamp(26px, 6vw, 48px);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 90% 14%, rgb(110 85 217 / 42%), transparent 17rem),
+        var(--dark);
+      color: #fff;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--lime);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 680px;
+      margin: 0;
+      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      letter-spacing: -0.07em;
+      line-height: 1.04;
+    }
+
+    .intro {
+      max-width: 620px;
+      margin: 16px 0 0;
+      color: #e2e0ed;
+    }
+
+    .content-panel {
+      margin-top: 20px;
+      padding: clamp(20px, 4vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: 0 14px 36px rgb(36 36 58 / 7%);
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      color: var(--dark);
+      font-size: 1.35rem;
+      letter-spacing: -0.04em;
+    }
+
+    .panel-copy {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .demo-box {
+      padding: 22px;
+      border: 1px solid #ded9f7;
+      border-radius: 16px;
+      background: #faf9ff;
+    }
+
+    .toggle-button {
+      min-height: 46px;
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--purple-dark);
+      color: #fff;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .toggle-button:hover {
+      background: var(--purple);
+    }
+
+    .detail-text {
+      margin: 18px 0 0;
+      padding: 15px 17px;
+      border-left: 4px solid var(--lime);
+      border-radius: 0 10px 10px 0;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    pre {
+      max-width: 100%;
+      margin: 18px 0 0;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 12px;
+      background: var(--dark);
+      color: #fff;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .load-status {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        border-radius: 20px;
+      }
+
+      .demo-box {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="topbar" aria-label="Page navigation">
+      <a class="brand" href="../index.html">Aung Sett Khine · Web Programming</a>
+      <a class="back-link" href="index.html">← Week 12_1 shopping cart</a>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Week 12_1 · Exercise 1</p>
+      <h1>Toggle details with state.</h1>
+      <p class="intro">Use a boolean state value to show and hide extra information without reloading the page.</p>
+    </header>
+
+    <section class="content-panel" aria-labelledby="demo-heading">
+      <h2 id="demo-heading">Try the toggle</h2>
+      <p class="panel-copy">Click the button to reveal the paragraph, then click again to hide it.</p>
+      <div id="toggle-root"></div>
+      <p class="load-status" id="load-status" role="status" aria-live="polite">Loading React…</p>
+    </section>
+
+    <section class="content-panel" aria-labelledby="code-heading">
+      <h2 id="code-heading">Component code</h2>
+      <pre><code>function ToggleDetail() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setIsVisible(prev =&gt; !prev)}&gt;
+        {isVisible ? 'Hide details' : 'Show details'}
+      &lt;/button&gt;
+      {isVisible &amp;&amp; (
+        &lt;p&gt;React state enables dynamic UIs without page reloads.&lt;/p&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+    </section>
+  </main>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ToggleDetail() {
+      const [isVisible, setIsVisible] = useState(false);
+
+      return (
+        <div className="demo-box">
+          <button
+            className="toggle-button"
+            type="button"
+            aria-expanded={isVisible}
+            aria-controls="toggle-detail"
+            onClick={() => setIsVisible(prev => !prev)}
+          >
+            {isVisible ? "Hide details" : "Show details"}
+          </button>
+          <div id="toggle-detail">
+            {isVisible && (
+              <p className="detail-text">
+                React state enables dynamic UIs without page reloads.
+              </p>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("toggle-root"));
+    root.render(<ToggleDetail />);
+    document.getElementById("load-status").textContent =
+      "React is ready. The details start hidden.";
+  </script>
+</body>
+</html>
